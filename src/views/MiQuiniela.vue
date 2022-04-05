@@ -56,7 +56,7 @@ import SelectTeam from '../components/SelectTeam.vue'
 
 
 const isLoading = ref(false)
-const isLocked = ref(true)
+const isLocked = ref(false)
 
 function saveData(){
     isLoading.value = true

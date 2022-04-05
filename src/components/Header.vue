@@ -13,16 +13,16 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#" @click="redirect('admin')">Panel Admin</a>
+                            <a class="nav-link" :class="{'active': route.name === 'Admin'}" href="#" @click="redirect('admin')">Panel Admin</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="#" @click="redirect('marcador')">Marcador</a>
+                            <a class="nav-link" :class="{'active': route.name === 'Marcador'}" href="#" @click="redirect('marcador')">Marcador</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" @click="redirect('quinielas')">Todas las quinielas</a>
+                            <a class="nav-link" :class="{'active': route.name === 'Quinielas'}" href="#" @click="redirect('quinielas')">Todas las quinielas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" @click="redirect('mi-quiniela')">Mi quiniela</a>
+                            <a class="nav-link" :class="{'active': route.name === 'MiQuiniela'}" href="#" @click="redirect('mi-quiniela')">Mi quiniela</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
@@ -41,9 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 function redirect(to: string) {
   router.push(to)
