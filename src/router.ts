@@ -12,6 +12,11 @@ const routes = [
     path: "/mi-quiniela",
     name: 'MiQuiniela',
     component: MiQuiniela
+  },
+  {
+    path: "/admin",
+    name: 'Admin',
+    component: Home
   }
 ];
 

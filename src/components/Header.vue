@@ -13,6 +13,9 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
                         <li class="nav-item">
+                            <a class="nav-link active" href="#" @click="redirect('admin')">Panel Admin</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link active" href="#" @click="redirect('marcador')">Marcador</a>
                         </li>
                         <li class="nav-item">

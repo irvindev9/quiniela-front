@@ -12,10 +12,10 @@
                 <div id="mi-quiniela" class="card">
                     <div class="card-header bg-light d-flex justify-content-between">
                         <h5 class="m-0">Tu quiniela: Usuario</h5>
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="isLoading = !isLoading">
+                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                Loading...
+                                Guardando...
                             </div>
                             <div v-else>
                                 Guardar
@@ -32,6 +32,17 @@
                             </span>
                         </div>
                     </div>
+                    <div class="card-footer bg-light d-flex justify-content-end">
+                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData">
+                            <div v-if="isLoading">
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Guardando...
+                            </div>
+                            <div v-else>
+                                Guardar
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -45,14 +56,18 @@ import SelectTeam from '../components/SelectTeam.vue'
 
 
 const isLoading = ref(false)
-const isLocked = ref(false)
+const isLocked = ref(true)
 
-onMounted(() => {
-    iziToast.success({
-        title: 'OK!',
-        message: 'Tu quiniela ha sido guardada',
-    });
-})
+function saveData(){
+    isLoading.value = true
+    setTimeout(() => {
+        isLoading.value = false
+        iziToast.success({
+            title: 'OK!',
+            message: 'Tu quiniela ha sido guardada',
+        })
+    }, 1000)
+}
 </script>
 
 
