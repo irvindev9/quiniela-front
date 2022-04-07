@@ -4,6 +4,7 @@
             <div class="col-12 col-md-10 col-lg-8 col-xl-6 mb-1">
                 <select class="form-select" name="semana" id="semana-selector">
                     <option value="1">Semana 1</option>
+                    <option value="2">Semana 2</option>
                 </select>
             </div>
         </div>

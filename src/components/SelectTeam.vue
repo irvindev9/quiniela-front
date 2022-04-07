@@ -2,12 +2,12 @@
     <div>
         <div class="match match-1">
             <div class="match-team border" :class="{'border-primary bg-light': selected1}" @click="selectTeam(1)">
-                <img width="25" height="25" :src="logo1" alt="team1">
+                <img width="25" height="25" :src="logo1" alt="team1"> 
                 {{match.team1.name}}
             </div>
             <div class="vs-title d-flex align-items-center">VS</div>
             <div class="match-team border" :class="{'border-primary bg-light': selected2}" @click="selectTeam(2)">
-                <img width="25" height="25" :src="logo2" alt="team2">
+                <img width="25" height="25" :src="logo2" alt="team2"> 
                 {{match.team2.name}}
             </div>
         </div>

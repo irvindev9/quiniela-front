@@ -1,5 +1,5 @@
 <template>
-    <div class="container bg-white rounded">
+    <div class="admin-container container bg-white rounded shadow-sm">
         <div class="row">
             <div class="col-12 px-0 mt-1">
                 <ul class="nav nav-tabs">
@@ -17,7 +17,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-12 card-header">
+            <div class="col-12 card-header text-center">
                 <h5 class="mt-3">Panel de administración</h5>
             </div>
             <div class="col-12 card-body">
@@ -75,3 +75,14 @@ export default defineComponent({
     }
 })
 </script>
+
+<style lang="scss">
+.admin-container{
+    .nav {
+        .nav-item .active{
+            background-color: rgba(0,0,0,.03);
+            border-color: #dee2e6 #dee2e6 #f7f7f7;
+        }
+    }
+}
+</style>
