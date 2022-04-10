@@ -7,10 +7,10 @@
             <div class="col-12 col-lg-10">
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4">
-                        <input type="text" class="form-control" placeholder="Nombre">
+                        <input type="text" class="form-control form-control-sm" placeholder="Nombre">
                     </div>
                     <div class="col-12 col-md-6 col-lg-4">
-                        <input type="datetime-local" class="form-control">
+                        <input type="datetime-local" class="form-control form-control-sm">
                         <small class="text-muted">
                             Fecha y hora del servidor
                             <br>
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="col-12 col-lg-2">
-                <button class="btn btn-primary">
+                <button class="btn btn-primary btn-sm">
                     <i class="bi bi-save"></i> 
                     Agregar
                 </button>
@@ -75,7 +75,7 @@
                                         <th>Acciones</th>
                                     </tr>
                                     <tbody>
-                                        <tr v-for="index in 10">
+                                        <tr v-for="index in 10" :key="index">
                                             <td class="text-start">
                                                 <img width="35" height="35" src="../../assets/teams/team_08.png" alt="team-visita"> <span>Miami Dolphins</span>
                                                 <p class="text-start">

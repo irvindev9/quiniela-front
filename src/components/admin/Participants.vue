@@ -16,14 +16,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="index in 9">
-                            <td>
+                        <tr v-for="index in 9" :key="index">
+                            <td class="text-center">
                                 <img width="20" height="20" src="../../assets/teams/team_09.png" alt="team-visita">
                             </td>
                             <td>
                                 <span>
                                     <i class="bi bi-person-circle"></i>
                                     Juan Perez
+                                    <span class="badge rounded-pill bg-primary edit">
+                                        <i class="bi bi-pencil"></i> 
+                                        Editar
+                                    </span>
                                 </span>
                             </td>
                             <td>
@@ -47,6 +51,11 @@
                                     <i class="bi bi-cash-coin"></i>
                                     Pagado
                                 </span>
+                                <br>
+                                <span v-if="index < 3" class="badge rounded-pill bg-warning admin-bagde">
+                                    <i class="bi bi-lightning-charge"></i>
+                                    Admin
+                                </span>
                             </td>
                             <td>
                                 <span class="badge rounded-pill bg-warning" data-bs-toggle="modal" :data-bs-target="'#' + modalName">
@@ -65,7 +74,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Modal from '../Modal.vue';
+import Modal from '../modals/Modal.vue';
 
 const newPassword = ref('');
 const modalName = ref('participantsModal');
@@ -77,6 +86,14 @@ const modalName = ref('participantsModal');
 .participants-container {
     span.badge {
         cursor: pointer;
+    }
+
+    span.admin-bagde {
+        cursor: not-allowed;
+    }
+
+    span.edit {
+        font-size: 8px;
     }
 }
 </style>

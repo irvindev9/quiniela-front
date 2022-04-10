@@ -17,7 +17,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="col-12 card-header text-center">
+            <div class="col-12 card-header text-center shadow-sm">
                 <h5 class="mt-3">Panel de administración</h5>
             </div>
             <div class="col-12 card-body">

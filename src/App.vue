@@ -7,6 +7,24 @@
 
 <script setup lang="ts">
 import Header from './components/Header.vue'
+import Cookies from 'js-cookie';
+import iziToast from "izitoast";
+
+if (!Cookies.get('cookies-advice')){
+  iziToast.info({
+      title: 'Aviso!',
+      message: 'Esta web utiliza cookies para mejorar la experiencia de usuario',
+      timeout: false,
+      buttons: [
+        ['<button>Ok</button>', function (instance, toast) {
+            Cookies.set('cookies-advice', 'true', { expires: 365 });
+             instance.hide({
+                transitionOut: 'fadeOutUp',
+            }, toast);
+        }, true]
+      ]
+  })
+}
 </script>
 
 <style>

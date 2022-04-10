@@ -30,9 +30,9 @@
             </div>
         </div>
         <hr/>
-        <div class="row px-5 border-bottom mb-2" v-for="index in 3">
+        <div class="row px-5 border-bottom mb-2" v-for="index in 3" :key="index">
             <div class="col-12 col-md-6 col-lg-4">
-                <img class="img-fluid" src="../../assets/background.jpg" alt="bg">
+                <img class="img-fluid rounded shadow-sm" src="../../assets/background.jpg" alt="bg">
             </div>
             <div class="col-12 col-md-6 col-lg-8">
                 <p>
