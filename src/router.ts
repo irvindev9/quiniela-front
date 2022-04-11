@@ -3,6 +3,7 @@ import Home from "./views/Home.vue";
 import MiQuiniela from "./views/MiQuiniela.vue";
 import Admin from "./views/Admin.vue";
 import Leaderboard from "./views/Leaderboard.vue";
+import Results from "./views/Results.vue";
 
 const routes = [
   {
@@ -24,6 +25,11 @@ const routes = [
     path: "/marcador",
     name: 'Marcador',
     component: Leaderboard
+  }, 
+  {
+    path: "/quinielas",
+    name: 'Quinielas',
+    component: Results
   }
 ];
 
