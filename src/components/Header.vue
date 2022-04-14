@@ -58,6 +58,12 @@ nav.bg-light {
 
 .navbar {
     box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+
+    .nav-link.active {
+        background: rgba(200, 200, 200, 0.1);
+        border-radius: 10px;
+        font-weight: 500;
+    }
 }
 
 .dropdown-menu[data-bs-popper] {

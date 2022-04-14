@@ -1,5 +1,5 @@
 <template>
-  <div class="first-places row">
+  <div class="first-places row mx-0">
     <div class="col second-place">
       <div class="circle shadow-sm">
         <img src="https://picsum.photos/200" alt="img">
@@ -43,6 +43,9 @@
 </template>
 
 <style lang="scss">
+$sm: 576px;
+$md: 768px;
+
 .first-places {
   display: flex;
   justify-content: space-between;
@@ -57,6 +60,8 @@
     margin: auto;
     border: 3px solid rgba(180, 180, 180, 0.5);
     cursor: default !important;
+    
+    
 
     img {
       width: 100%;
@@ -88,6 +93,16 @@
     .circle {
       width: 80px;
       height: 80px;
+    }
+  }
+
+  .col {
+    p {
+      font-size: smaller;
+
+      @media (min-width: $md) {
+        font-size: medium;
+      }
     }
   }
 }

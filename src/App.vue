@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header />
+    <Header v-if="route.name !== 'Home'" />
     <router-view />
   </div>
 </template>
@@ -9,6 +9,9 @@
 import Header from './components/Header.vue'
 import Cookies from 'js-cookie';
 import iziToast from "izitoast";
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 if (!Cookies.get('cookies-advice')){
   iziToast.info({

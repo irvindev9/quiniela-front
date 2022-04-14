@@ -4,7 +4,7 @@
             Panel de usuarios
         </h5>
         <div class="row participants-container">
-            <div class="col-12">
+            <div class="col-12 table-responsive">
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -34,6 +34,10 @@
                                 <span>
                                     <i class="bi bi-envelope"></i>
                                     user@user.com
+                                    <span class="badge rounded-pill bg-primary edit">
+                                        <i class="bi bi-door-open"></i>
+                                        Login
+                                    </span>
                                 </span>
                             </td>
                             <td>
@@ -42,12 +46,12 @@
                                     Eliminar
                                 </span>
                                 <br>
-                                <span class="badge rounded-pill bg-secondary">
+                                <span class="badge rounded-pill bg-secondary" :class="{'pressed': index < 3}">
                                     <i class="bi bi-eye-slash"></i>
                                     Ocultar
                                 </span>
                                 <br>
-                                <span class="badge rounded-pill bg-success">
+                                <span class="badge rounded-pill bg-success" :class="{'pressed': index < 3}">
                                     <i class="bi bi-cash-coin"></i>
                                     Pagado
                                 </span>
@@ -94,6 +98,12 @@ const modalName = ref('participantsModal');
 
     span.edit {
         font-size: 8px;
+    }
+
+    .pressed {
+        box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
+        background-color: white !important;
+        color: grey;
     }
 }
 </style>

@@ -24,7 +24,7 @@
                         </button>
                     </div>
                     <div class="card-body">
-                        <SelectTeam v-for="index in 16" /> 
+                        <SelectTeam v-for="index in 16" :key="index" /> 
                         <div class="lock-match align-middle" v-if="isLocked">
                             <span>
                                 <i class="bi-lock"></i>
@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import iziToast from "izitoast";
-import SelectTeam from '../components/SelectTeam.vue'
+import SelectTeam from '../components/miquiniela/SelectTeam.vue'
 
 
 const isLoading = ref(false)

@@ -1,5 +1,5 @@
 <template>
-  <div class="second-places row">
+  <div class="second-places row mx-0 px-2">
     <div class="col-12 rounded border player py-2 my-1 shadow-sm" v-for="index in 10" :key="index">
       <div class="place-holder">
         <span class="place">{{ (3 + index).toString().padStart(2, '0') }}.</span>

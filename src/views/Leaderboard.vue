@@ -3,7 +3,7 @@
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-8 text-center bg-white rounded p-2">
         <h5 class="py-3">Tabla de resultados</h5>
-        <div class="row justify-content-center">
+        <div class="row mx-0 justify-content-center">
           <div class="col-12 col-md-10">
             <FirstPlaces />
           </div>
