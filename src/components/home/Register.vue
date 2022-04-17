@@ -5,19 +5,19 @@
     </div>
     <div class="form-group">
         <label for="whats">Número de WhatsApp</label>
-        <input type="text" class="form-control" id="whats" placeholder="Número de WhatsApp">
+        <input type="text" class="form-control" id="whats" placeholder="Número de WhatsApp"/>
     </div>
     <div class="form-group">
         <label for="password">Contraseña</label>
-        <input type="password" class="form-control" id="password" placeholder="Contraseña">
+        <input type="password" class="form-control" id="password" placeholder="Contraseña"/>
     </div>
     <div class="form-group">
         <label for="password">Confirmar contraseña</label>
-        <input type="password" class="form-control" id="password" placeholder="Contraseña">
+        <input type="password" class="form-control" id="password" placeholder="Contraseña"/>
     </div>
     <div class="form-group">
         <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" placeholder="Nombre">
+        <input type="text" class="form-control" id="name" placeholder="Nombre"/>
     </div>
     <div class="form-group">
         <label for="team">Equipo</label>

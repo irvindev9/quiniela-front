@@ -159,7 +159,7 @@ function preview() {
         title: '',
         message: message.value,
         color: color.value,
-        position: position.value,
+        // position: position.value,
         close: true,
         timeout: 10000,
     });

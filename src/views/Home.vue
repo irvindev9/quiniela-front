@@ -4,7 +4,8 @@
         <div class="login-register-container shadow">
             <HeaderRegister />
             <div class="login-register-content">
-                <Register />
+                <Register v-if="page == 'register'" />
+                <Login v-if="page == 'login'" />
             </div>  
         </div>
         <div class="title-container d-flex align-items-center justify-content-center">
@@ -19,9 +20,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Register from '../components/home/Register.vue';
+import Login from '../components/home/Login.vue';
 import HeaderRegister from '../components/home/HeaderRegister.vue';
 
 const player = ref('');
+const page = ref('login');
 player.value = new URL(`../assets/home_players/player_${Math.floor(Math.random() * (5 - 0))}.png`, import.meta.url).href;
 
 </script>
