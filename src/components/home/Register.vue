@@ -4,8 +4,8 @@
       <h3 class="text-center">Registro</h3>
     </div>
     <div class="form-group">
-        <label for="email">Correo</label>
-        <input type="email" class="form-control" id="email" placeholder="Correo">
+        <label for="whats">Número de WhatsApp</label>
+        <input type="text" class="form-control" id="whats" placeholder="Número de WhatsApp">
     </div>
     <div class="form-group">
         <label for="password">Contraseña</label>

@@ -42,8 +42,8 @@ const logo2 = ref()
 const selected1 = ref()
 const selected2 = ref()
 watchEffect(async () => {
-    logo1.value = new URL(`../assets/teams/team_${props.match.team1.logo}.png`, import.meta.url).href;
-    logo2.value = new URL(`../assets/teams/team_${props.match.team2.logo}.png`, import.meta.url).href;
+    logo1.value = new URL(`../../assets/teams/team_${props.match.team1.logo}.png`, import.meta.url).href;
+    logo2.value = new URL(`../../assets/teams/team_${props.match.team2.logo}.png`, import.meta.url).href;
     selected1.value = props.match.team1.selected
     selected2.value = props.match.team2.selected
 })
