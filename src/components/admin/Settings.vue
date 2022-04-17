@@ -147,10 +147,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { Ref } from 'vue'
 import iziToast from 'izitoast';
+import { IziToastPosition } from 'izitoast';
 
 const color = ref('rgba(157,222,255,.9)');
-const position = ref('topRight');
+const position: Ref<IziToastPosition> = ref('topRight');
 const message = ref('');
 const activeUntil = ref('');
 
@@ -159,7 +161,7 @@ function preview() {
         title: '',
         message: message.value,
         color: color.value,
-        // position: position.value,
+        position: position.value,
         close: true,
         timeout: 10000,
     });
