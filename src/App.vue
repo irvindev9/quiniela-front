@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 import iziToast from "izitoast";
 import { useRoute } from 'vue-router'
 import { useUserStore } from './stores/UserStore'
+import { onBeforeMount } from 'vue';
 
 const route = useRoute()
 
@@ -30,11 +31,13 @@ if (!Cookies.get('cookies-advice')){
   })
 }
 
-if (Cookies.get('user-info') && Cookies.get('sanctum-session')) {
-  const userStore = useUserStore()
-  const data = JSON.parse(Cookies.get('user-info')!)
-  userStore.updateUserInfo(data, Cookies.get('sanctum-session'))
-}
+onBeforeMount(() => {
+  if (Cookies.get('user-info') && Cookies.get('sanctum-session')) {
+    const userStore = useUserStore()
+    const data = JSON.parse(Cookies.get('user-info')!)
+    userStore.updateUserInfo(data, Cookies.get('sanctum-session'))
+  }
+})
 </script>
 
 <style>
