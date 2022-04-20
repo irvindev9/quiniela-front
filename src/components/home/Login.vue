@@ -38,9 +38,6 @@ import { useUserStore } from '../../stores/UserStore';
 
 const userStore = useUserStore();
 
-userStore.test();
-
-
 axios.defaults.withCredentials = true;
 
 const whatsNumber = ref('6565340038');
@@ -51,18 +48,18 @@ const router = useRouter();
 
 async function login() {
   isLoading.value = true;
-  await axios.post(import.meta.env.VITE_BASE_URL + 'login', {
+  await axios.post(import.meta.env.VITE_API_URL + 'login', {
       email: whatsNumber.value,
       password: password.value
     }).then(async (response: any) => {
 
-    Cookies.set('sanctum-session', response.data.token, { expires: 7 });
+    Cookies.set('sanctum-session', response.data.token, { expires: 7 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
 
     const { data } = await getUserInfo(response.data.token);
 
     userStore.updateUserInfo(data, response.data.token);
     
-    Cookies.set('user-info', JSON.stringify(data), { expires: 7 });
+    Cookies.set('user-info', JSON.stringify(data), { expires: 7 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
 
     router.push('/marcador');
 

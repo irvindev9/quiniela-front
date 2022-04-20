@@ -65,7 +65,7 @@ const router = useRouter();
 
 async function register() {
   isLoading.value = true;
-  await axios.post(import.meta.env.VITE_BASE_URL + 'register', {
+  await axios.post(import.meta.env.VITE_API_URL + 'register', {
       email: whatsNumber.value,
       password: password.value,
       password_confirmation: password_confirm.value,
@@ -75,9 +75,9 @@ async function register() {
 
     userStore.updateUserInfo(data, response.data.token);
 
-    Cookies.set('sanctum-session', response.data.token, { expires: 7 });
+    Cookies.set('sanctum-session', response.data.token, { expires: 7 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
     
-    Cookies.set('user-info', JSON.stringify(data), { expires: 7 });
+    Cookies.set('user-info', JSON.stringify(data), { expires: 7 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
 
     router.push('/marcador');
   }).catch(error => {

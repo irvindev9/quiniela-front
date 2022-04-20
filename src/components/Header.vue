@@ -42,9 +42,9 @@
 
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
-import Cookies from 'js-cookie';
 import { useUserStore } from '../stores/UserStore';
-import { storeToRefs } from 'pinia';
+import { logout as logoutCookies } from '../utils/session';
+// import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
 // const { isAuthenticated } = storeToRefs(useUserStore());
@@ -58,6 +58,7 @@ function redirect(to: string) {
 
 function logout() {
   userStore.logout();
+  logoutCookies();
   router.push('/')
 }
 </script>
