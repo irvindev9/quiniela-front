@@ -13,7 +13,7 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" :class="{'active': route.name === 'Admin'}" href="#" @click="redirect('admin')">Panel Admin</a>
+                            <a class="nav-link" :class="{'active': route.name === 'Admin'}" href="#" @click="redirect('admin')" v-if="userStore.isAuthenticated">Panel Admin</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" :class="{'active': route.name === 'Marcador'}" href="#" @click="redirect('marcador')">Marcador</a>
@@ -22,12 +22,12 @@
                             <a class="nav-link" :class="{'active': route.name === 'Quinielas'}" href="#" @click="redirect('quinielas')">Todas las quinielas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" :class="{'active': route.name === 'MiQuiniela'}" href="#" @click="redirect('mi-quiniela')">Mi quiniela</a>
+                            <a class="nav-link" :class="{'active': route.name === 'MiQuiniela'}" href="#" @click="redirect('mi-quiniela')" v-if="userStore.isAuthenticated">Mi quiniela</a>
                         </li>
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown" v-if="userStore.isAuthenticated">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                Usuario
+                                {{userStore.name}}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <li><a class="dropdown-item" href="#" @click="logout">Cerrar sesión</a></li>
@@ -43,6 +43,11 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
 import Cookies from 'js-cookie';
+import { useUserStore } from '../stores/UserStore';
+import { storeToRefs } from 'pinia';
+
+const userStore = useUserStore();
+// const { isAuthenticated } = storeToRefs(useUserStore());
 
 const router = useRouter()
 const route = useRoute()
@@ -52,7 +57,7 @@ function redirect(to: string) {
 }
 
 function logout() {
-  Cookies.remove('sanctum-session')
+  userStore.logout();
   router.push('/')
 }
 </script>

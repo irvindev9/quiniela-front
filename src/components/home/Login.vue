@@ -34,12 +34,17 @@ import { useRouter } from 'vue-router';
 import Cookies from 'js-cookie';
 import { getUserInfo } from '../../utils/session';
 import iziToast from 'izitoast';
+import { useUserStore } from '../../stores/UserStore';
+
+const userStore = useUserStore();
+
+userStore.test();
 
 
 axios.defaults.withCredentials = true;
 
-const whatsNumber = ref('');
-const password = ref('');
+const whatsNumber = ref('6565340038');
+const password = ref('abc123');
 const isLoading = ref(false);
 
 const router = useRouter();
@@ -49,12 +54,15 @@ async function login() {
   await axios.post(import.meta.env.VITE_BASE_URL + 'login', {
       email: whatsNumber.value,
       password: password.value
-    }).then((response: any) => {
-    console.log(response);
+    }).then(async (response: any) => {
 
     Cookies.set('sanctum-session', response.data.token, { expires: 7 });
+
+    const { data } = await getUserInfo(response.data.token);
+
+    userStore.updateUserInfo(data, response.data.token);
     
-    Cookies.set('user-info', getUserInfo(response.data.token), { expires: 7 });
+    Cookies.set('user-info', JSON.stringify(data), { expires: 7 });
 
     router.push('/marcador');
 

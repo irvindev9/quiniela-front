@@ -87,6 +87,10 @@ $md: 768px;
     .place-holder:hover {
       display: none;
     }
+
+    .place-holder span:hover {
+      display: none;
+    }
   }
 
   .second-place {

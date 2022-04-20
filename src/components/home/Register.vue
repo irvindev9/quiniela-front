@@ -49,6 +49,9 @@ import { ref } from 'vue';
 import Cookies from 'js-cookie';
 import { getUserInfo } from '../../utils/session';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '../../stores/UserStore';
+
+const userStore = useUserStore();
 
 axios.defaults.withCredentials = true;
 
@@ -67,12 +70,14 @@ async function register() {
       password: password.value,
       password_confirmation: password_confirm.value,
       name: name.value
-    }).then(response => {
-    console.log(response);
+    }).then(async (response) => {
+    const { data } = await getUserInfo(response.data.token);
+
+    userStore.updateUserInfo(data, response.data.token);
 
     Cookies.set('sanctum-session', response.data.token, { expires: 7 });
-
-    Cookies.set('user-info', getUserInfo(response.data.token), { expires: 7 });
+    
+    Cookies.set('user-info', JSON.stringify(data), { expires: 7 });
 
     router.push('/marcador');
   }).catch(error => {
