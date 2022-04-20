@@ -1,7 +1,8 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
-export const getUserInfo = (token) => {
-  const userInfo = [];
+export const getUserInfo: any  = (token: string) => {
+  const userInfo: any = [];
 
   axios.get(import.meta.env.VITE_BASE_URL + 'user', {
     headers: {
@@ -11,9 +12,12 @@ export const getUserInfo = (token) => {
     userInfo.push(res.data);
   });
 
-  return userInfo;ß
+  return userInfo;
 }
 
 export const logout = () => {
+  Cookies.remove('token');
+  Cookies.remove('user-info');
+  Cookies.remove('sanctum-session');
   return axios.get(import.meta.env.VITE_BASE_URL + 'logout');
 }

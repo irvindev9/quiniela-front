@@ -12,8 +12,8 @@
         <input type="password" class="form-control" id="password" placeholder="Contraseña" v-model="password"/>
     </div>
     <div class="form-group">
-        <label for="password">Confirmar contraseña</label>
-        <input type="password" class="form-control" id="password" placeholder="Contraseña" v-model="password_confirm"/>
+        <label for="password_confirm">Confirmar contraseña</label>
+        <input type="password" class="form-control" id="password_confirm" placeholder="Contraseña" v-model="password_confirm"/>
     </div>
     <div class="form-group">
         <label for="name">Nombre</label>
@@ -28,7 +28,17 @@
         </select>
     </div>
     <div class="form-group mt-3 text-end">
-      <button class="btn btn-primary btn-block" @click="register">Registrarse</button>
+      <button class="btn btn-outline-primary btn-block border-light mx-1" @click="$emit('changeBetweenPages')">Ya tengo cuenta</button>
+      <button class="btn btn-primary btn-block" @click="register">
+        <div v-if="!isLoading">
+          Registrarse
+        </div>
+        <div v-else>
+          <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </button>
     </div>
   </div>
 </template>
@@ -36,6 +46,9 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { ref } from 'vue';
+import Cookies from 'js-cookie';
+import { getUserInfo } from '../../utils/session';
+import { useRouter } from 'vue-router';
 
 axios.defaults.withCredentials = true;
 
@@ -43,19 +56,36 @@ const whatsNumber = ref('');
 const password = ref('');
 const password_confirm = ref('');
 const name = ref('');
+const isLoading = ref(false);
+
+const router = useRouter();
 
 async function register() {
-  await axios.post(process.env.URL + 'register', {
+  isLoading.value = true;
+  await axios.post(import.meta.env.VITE_BASE_URL + 'register', {
       email: whatsNumber.value,
       password: password.value,
       password_confirmation: password_confirm.value,
       name: name.value
     }).then(response => {
     console.log(response);
+
+    Cookies.set('sanctum-session', response.data.token, { expires: 7 });
+
+    Cookies.set('user-info', getUserInfo(response.data.token), { expires: 7 });
+
+    router.push('/marcador');
   }).catch(error => {
     console.log(error);
+  }).finally(() => {
+    isLoading.value = false;
   });
 }
+
+function redirect(to: string) {
+  router.push(to);
+}
+
 </script>
 
 <style lang="scss">

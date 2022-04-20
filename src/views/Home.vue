@@ -4,8 +4,8 @@
         <div class="login-register-container shadow">
             <HeaderRegister />
             <div class="login-register-content">
-                <Register v-if="page == 'register'" />
-                <Login v-if="page == 'login'" />
+                <Register v-if="page == 'register'" @changeBetweenPages="changeBetweenPages" />
+                <Login v-if="page == 'login'" @changeBetweenPages="changeBetweenPages" />
             </div>  
         </div>
         <div class="title-container d-flex align-items-center justify-content-center">
@@ -27,6 +27,9 @@ const player = ref('');
 const page = ref('login');
 player.value = new URL(`../assets/home_players/player_${Math.floor(Math.random() * (5 - 0))}.png`, import.meta.url).href;
 
+function changeBetweenPages() {
+    page.value = (page.value === 'register') ? 'login' : 'register';
+}
 </script>
 
 
