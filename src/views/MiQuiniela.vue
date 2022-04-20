@@ -13,7 +13,7 @@
                 <div id="mi-quiniela" class="card">
                     <div class="card-header bg-light d-flex justify-content-between">
                         <h5 class="m-0">Tu quiniela: Usuario</h5>
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData">
+                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" :disabled="isLocked">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Guardando...
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                     <div class="card-footer bg-light d-flex justify-content-end">
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData">
+                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" :disabled="isLocked">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Guardando...
@@ -89,6 +89,7 @@ function saveData(){
             height: 100%;
             background: white;
             opacity: 0.7;
+            text-align: center;
 
             span {
                 position: relative;

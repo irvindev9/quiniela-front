@@ -15,7 +15,7 @@ export const getUserInfo: any  = (token: string) => {
   return userInfo;
 }
 
-export const logout = () => {
+export const logout: any = () => {
   Cookies.remove('token');
   Cookies.remove('user-info');
   Cookies.remove('sanctum-session');
