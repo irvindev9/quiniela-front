@@ -30,7 +30,7 @@
                                 Usuario
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="#" @click="redirect('logout')">Cerrar sesión</a></li>
+                                <li><a class="dropdown-item" href="#" @click="logout">Cerrar sesión</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -42,12 +42,18 @@
 
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
+import Cookies from 'js-cookie';
 
 const router = useRouter()
 const route = useRoute()
 
 function redirect(to: string) {
   router.push(to)
+}
+
+function logout() {
+  Cookies.remove('sanctum-session')
+  router.push('/')
 }
 </script>
 

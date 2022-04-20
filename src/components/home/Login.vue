@@ -20,16 +20,27 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { ref } from 'vue';
+import Cookies from 'js-cookie';
+import { getUserInfo } from '../../utils/session';
+
+axios.defaults.withCredentials = true;
 
 const whatsNumber = ref('');
 const password = ref('');
 
 async function login() {
-  await axios.post('/login', {
-    whatsNumber: whatsNumber.value,
-    password: password.value
-  }).then(response => {
+  await axios.post(import.meta.env.VITE_BASE_URL + 'login', {
+      email: whatsNumber.value,
+      password: password.value
+    }).then((response: any) => {
     console.log(response);
+    Cookies.set('sanctum-session', response.data.token, { expires: 365 });
+    
+    Cookies.set(
+      'user_info', getUserInfo(response.data.token),
+      { expires: 365 }
+    )
+
   }).catch(error => {
     console.log(error);
   });
