@@ -13,7 +13,7 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" :class="{'active': route.name === 'Admin'}" href="#" @click="redirect('admin')" v-if="userStore.isAuthenticated">Panel Admin</a>
+                            <a class="nav-link" :class="{'active': route.name === 'Admin'}" href="#" @click="redirect('admin')" v-if="userStore.isAuthenticated && userStore.role_id == 1">Panel Admin</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" :class="{'active': route.name === 'Marcador'}" href="#" @click="redirect('marcador')">Marcador</a>

@@ -10,20 +10,20 @@
                         <tr>
                             <th>Equipo</th>
                             <th>Nombre</th>
-                            <th>Correo</th>
+                            <th>Número Tel.</th>
                             <th>Acciones</th>
                             <th>Cambiar password</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="index in 9" :key="index">
+                        <tr v-for="user in users" :key="user">
                             <td class="text-center">
                                 <img width="20" height="20" src="../../assets/teams/team_09.png" alt="team-visita">
                             </td>
                             <td>
                                 <span>
                                     <i class="bi bi-person-circle"></i>
-                                    Juan Perez
+                                    {{user.name}}
                                     <span class="badge rounded-pill bg-primary edit">
                                         <i class="bi bi-pencil"></i> 
                                         Editar
@@ -32,8 +32,8 @@
                             </td>
                             <td>
                                 <span>
-                                    <i class="bi bi-envelope"></i>
-                                    user@user.com
+                                    <i class="bi bi-phone"></i>
+                                    {{user.email}}
                                     <span class="badge rounded-pill bg-primary edit">
                                         <i class="bi bi-door-open"></i>
                                         Login
@@ -46,17 +46,17 @@
                                     Eliminar
                                 </span>
                                 <br>
-                                <span class="badge rounded-pill bg-secondary" :class="{'pressed': index < 3}">
+                                <span class="badge rounded-pill bg-secondary" :class="{'pressed': users.id < 3}">
                                     <i class="bi bi-eye-slash"></i>
                                     Ocultar
                                 </span>
                                 <br>
-                                <span class="badge rounded-pill bg-success" :class="{'pressed': index < 3}">
+                                <span class="badge rounded-pill bg-success" :class="{'pressed': user.id < 3}">
                                     <i class="bi bi-cash-coin"></i>
                                     Pagado
                                 </span>
                                 <br>
-                                <span v-if="index < 3" class="badge rounded-pill bg-warning admin-bagde">
+                                <span v-if="user.role_id == 1" class="badge rounded-pill bg-warning admin-bagde">
                                     <i class="bi bi-lightning-charge"></i>
                                     Admin
                                 </span>
@@ -77,11 +77,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Modal from '../modals/Modal.vue';
+import { getUsers } from '../../api/adminRequests';
 
 const newPassword = ref('');
 const modalName = ref('participantsModal');
+const users = ref([]);
+
+onMounted(async () => {
+    await loadUsers();
+});
+
+async function loadUsers() {
+    users.value = await getUsers();
+}
 
 
 </script>

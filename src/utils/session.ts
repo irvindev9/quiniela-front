@@ -12,10 +12,12 @@ export const getUserInfo: any  = (token: string) => {
   });
 }
 
-export const logout: any = () => {
-  console.log(import.meta.env.VITE_COOKIE_DOMAIN)
-  Cookies.remove('token', { path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
+export const logout: any = async () => {
   Cookies.remove('user-info', { path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
+  axios.get(import.meta.env.VITE_API_URL + 'logout',{
+    headers: {
+      Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+    },
+  });
   Cookies.remove('sanctum-session', { path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
-  return axios.get(import.meta.env.VITE_BASE_URL + 'logout');
 }
