@@ -1,14 +1,14 @@
 <template>
     <div>
         <div class="match match-1">
-            <div class="match-team border shadow-sm" :class="{'border-primary bg-light': selected1}" @click="selectTeam(1)">
-                <img width="25" height="25" :src="logo1" alt="team1"> 
-                {{match.team1.name}}
+            <div class="match-team border shadow-sm" :class="{'border-primary bg-light': (match.team_1.id == match.result_by_user)}" @click="selectTeam(match.team_1.id)">
+                <img width="25" height="25" :src="get_img(match.team_1.logo)" alt="team1"> 
+                {{match.team_1.name}}
             </div>
             <div class="vs-title d-flex align-items-center">VS</div>
-            <div class="match-team border shadow-sm" :class="{'border-primary bg-light': selected2}" @click="selectTeam(2)">
-                <img width="25" height="25" :src="logo2" alt="team2"> 
-                {{match.team2.name}}
+            <div class="match-team border shadow-sm" :class="{'border-primary bg-light': (match.team_2.id == match.result_by_user)}" @click="selectTeam(match.team_2.id )">
+                <img width="25" height="25" :src="get_img(match.team_2.logo)" alt="team2"> 
+                {{match.team_2.name}}
             </div>
         </div>
     </div>
@@ -21,18 +21,6 @@ const props = defineProps({
     match: {
         type: Object,
         required: true,
-        default: () => ({
-            team1: {
-                name: 'Miami Dolphins',
-                logo: '02',
-                selected: false,
-            },
-            team2: {
-                name: 'Buffalo Bills',
-                logo: '01',
-                selected: true,
-            },
-        }),
     },
 });
 
@@ -49,12 +37,11 @@ watchEffect(async () => {
 })
 
 function selectTeam(team: Number){
-    console.log(`Selected team ${team}`)
-    props.match.team1.selected = team === 1
-    selected1.value = team === 1
-    props.match.team2.selected = team === 2
-    selected2.value = team === 2
-    console.log(props.match)
+    props.match.result_by_user = team
+}
+
+function get_img(logo: string) {
+    return new URL(`../../assets/teams/${logo}`, import.meta.url).href;
 }
 </script>
 

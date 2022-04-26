@@ -24,7 +24,7 @@
                         </button>
                     </div>
                     <div class="card-body">
-                        <SelectTeam v-for="index in 16" :key="index" /> 
+                        <SelectTeam v-for="match in week[0].matches" :key="match.id" :match="match" /> 
                         <div class="lock-match align-middle" v-if="isLocked">
                             <span>
                                 <i class="bi-lock"></i>
@@ -51,13 +51,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import iziToast from "izitoast";
-import SelectTeam from '../components/miquiniela/SelectTeam.vue'
+import SelectTeam from '../components/miquiniela/SelectTeam.vue';
+import { getQuiniela } from '../api/quinielaRequests';
 
 
 const isLoading = ref(false)
 const isLocked = ref(false)
+const week = ref([{
+    matches: []
+}])
 
 function saveData(){
     isLoading.value = true
@@ -69,6 +73,15 @@ function saveData(){
         })
     }, 1000)
 }
+
+async function get(){
+    week.value = await getQuiniela(19);
+}
+
+onMounted( async() => {
+    await get();
+})
+
 </script>
 
 
