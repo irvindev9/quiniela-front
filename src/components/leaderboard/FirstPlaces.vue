@@ -15,7 +15,8 @@
     </div>
     <div class="col">
       <div class="circle shadow-sm">
-        <img src="https://picsum.photos/200" alt="img">
+        <img :src="getGravatarURL('irvin_21_95@hotmail.com')" alt="img">
+        <!-- <img src="https://picsum.photos/200" alt="img"> -->
         <div class="place-holder">
           <span>1</span>
         </div>
@@ -41,6 +42,15 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import md5 from 'md5';
+function getGravatarURL( email:string ) {
+  const address = String( email ).trim().toLowerCase();
+  const hash = md5( address );
+  return `https://www.gravatar.com/avatar/${ hash }`;
+}
+</script>
 
 <style lang="scss">
 $sm: 576px;

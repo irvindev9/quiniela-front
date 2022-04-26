@@ -11,11 +11,6 @@
                     </div>
                     <div class="col-12 col-md-6 col-lg-4">
                         <input type="datetime-local" class="form-control form-control-sm" v-model="dateTime">
-                        <small class="text-muted">
-                            Fecha y hora del servidor
-                            <br>
-                            12/12/2020 12:00
-                        </small>
                     </div>
                 </div>
             </div>
@@ -43,14 +38,15 @@
                                             <i class="bi bi-trash"></i> 
                                             Eliminar
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">
-                                            <i class="bi bi-door-open"></i>
-                                            Abrir semana
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" @click="update(match.id)">
+                                            <i class="bi bi-door-open" v-if="match.is_forced_open"></i>
+                                            <i class="bi bi-door-closed" v-else></i>
+                                            {{ match.is_forced_open ? 'Abrir' : 'Cerrar' }} semana
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                            <Matches :id="match.id" />
+                            <Matches :id="match.id" :matches="match.matches" @refresh="get" />
                         </div>
                     </div>
                 </div>
@@ -61,13 +57,14 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { saveWeek, getWeeks, deleteWeek } from '../../api/adminRequests';
+import { saveWeek, getWeeks, deleteWeek, updateWeek } from '../../api/adminRequests';
 import Matches from './addmatch/Matches.vue';
 
 const matches = ref({});
 
 const dateTime = ref('2022-12-12T12:00')
 const nameWeek = ref('')
+const matchesComponent = ref()
 
 onMounted(async () => {
     matches.value = await getWeeks();
@@ -89,7 +86,13 @@ async function get() {
 async function deleteW(id: number) {
     await deleteWeek(id);
 
-    matches.value = await getWeeks();
+    await get();
+}
+
+async function update(id: number) {
+    await updateWeek(id);
+
+    await get();
 }
 
 function makeSlug(name: string, id: number = 0) {
