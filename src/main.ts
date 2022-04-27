@@ -7,4 +7,6 @@ import 'bootstrap/dist/js/bootstrap.js'
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "izitoast/dist/css/iziToast.min.css";
 
-createApp(App).use(router).use(createPinia()).mount('#app')
+let vm = createApp(App).use(router).use(createPinia()).mount('#app')
+
+export default vm

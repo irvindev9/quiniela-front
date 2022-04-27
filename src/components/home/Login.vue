@@ -28,54 +28,22 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import Cookies from 'js-cookie';
-import { getUserInfo } from '../../utils/session';
-import iziToast from 'izitoast';
-import { useUserStore } from '../../stores/UserStore';
-
-const userStore = useUserStore();
-
-axios.defaults.withCredentials = true;
+import { loginUser } from '../../api/sessionRequests';
 
 const whatsNumber = ref('6565340038');
 const password = ref('abc123');
 const isLoading = ref(false);
 
-const router = useRouter();
 
 async function login() {
   isLoading.value = true;
-  await axios.post(import.meta.env.VITE_API_URL + 'login', {
-      email: whatsNumber.value,
-      password: password.value
-    }).then(async (response: any) => {
 
-    Cookies.set('sanctum-session', response.data.token, { expires: 7 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
+  await loginUser(whatsNumber.value, password.value);
 
-    const { data } = await getUserInfo(response.data.token);
-
-    userStore.updateUserInfo(data, response.data.token);
-    
-    Cookies.set('user-info', JSON.stringify(data), { expires: 7 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
-
-    router.push('/marcador');
-
-  }).catch(error => {
-    iziToast.error({
-      title: 'Error',
-      message: error.response.data.message,
-    });
-  }).finally(() => {
-    isLoading.value = false;
-  });
+  isLoading.value = false;
 }
 
-function redirect(to: string) {
-  router.push(to);
-}
 </script>
 
 

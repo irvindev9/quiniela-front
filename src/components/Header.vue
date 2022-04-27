@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '../stores/UserStore';
-import { logout as logoutCookies } from '../utils/session';
+import { logout as logoutCookies } from '../api/sessionRequests';
 // import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();

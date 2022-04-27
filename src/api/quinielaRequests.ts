@@ -25,7 +25,7 @@ export const saveQuiniela = async (week_id: number, quiniela: any) => {
 }
 
 export const getWeeks = async () => {
-  const { data } = await axios.get(import.meta.env.VITE_API_URL + 'weeks', {
+  const { data } = await axios.get(import.meta.env.VITE_API_URL + 'quiniela/weeks', {
     headers: {
       Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
     }

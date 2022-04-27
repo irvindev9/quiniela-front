@@ -44,16 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import { ref } from 'vue';
-import Cookies from 'js-cookie';
-import { getUserInfo } from '../../utils/session';
-import { useRouter } from 'vue-router';
-import { useUserStore } from '../../stores/UserStore';
-
-const userStore = useUserStore();
-
-axios.defaults.withCredentials = true;
+import { registerUser } from '../../api/sessionRequests';
 
 const whatsNumber = ref('');
 const password = ref('');
@@ -61,34 +53,17 @@ const password_confirm = ref('');
 const name = ref('');
 const isLoading = ref(false);
 
-const router = useRouter();
-
 async function register() {
   isLoading.value = true;
-  await axios.post(import.meta.env.VITE_API_URL + 'register', {
-      email: whatsNumber.value,
-      password: password.value,
-      password_confirmation: password_confirm.value,
-      name: name.value
-    }).then(async (response) => {
-    const { data } = await getUserInfo(response.data.token);
 
-    userStore.updateUserInfo(data, response.data.token);
-
-    Cookies.set('sanctum-session', response.data.token, { expires: 7 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
-    
-    Cookies.set('user-info', JSON.stringify(data), { expires: 7 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
-
-    router.push('/marcador');
-  }).catch(error => {
-    console.log(error);
-  }).finally(() => {
-    isLoading.value = false;
+  await registerUser({
+    email: whatsNumber.value,
+    password: password.value,
+    password_confirmation: password_confirm.value,
+    name: name.value
   });
-}
 
-function redirect(to: string) {
-  router.push(to);
+  isLoading.value = false;
 }
 
 </script>

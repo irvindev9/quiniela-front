@@ -12,7 +12,7 @@
                 <div id="mi-quiniela" class="card">
                     <div class="card-header bg-light d-flex justify-content-between">
                         <h5 class="m-0">Tu quiniela: Usuario</h5>
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" :disabled="isLocked">
+                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" v-if="!isLocked">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Guardando...
@@ -39,8 +39,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class="card-footer bg-light d-flex justify-content-end">
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" :disabled="isLocked">
+                    <div class="card-footer bg-light d-flex justify-content-end" v-if="!isLocked">
+                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Guardando...
@@ -93,7 +93,7 @@ function checkIfIsLocked(){
     if(force_open){
         isLocked.value = false;
     }else{
-        if(dateTime_to_close > today){
+        if(dateTime_to_close >= today){
             isLocked.value = false;
         }else{
             isLocked.value = true;
@@ -104,7 +104,6 @@ function checkIfIsLocked(){
 async function getW(){
     isLoading.value = true
     weeks.value = await getWeeks();
-    weeks.value = weeks.value.sort((a, b) => (a.id > b.id) ? -1 : 1);
     current_week.value = weeks.value[0].id;
     isLoading.value = false
 }
