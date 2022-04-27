@@ -2,9 +2,8 @@
     <div class="container">
         <div class="row d-flex justify-content-center">
             <div class="col-12 col-md-10 col-lg-8 col-xl-6 mb-1">
-                <select class="form-select" name="semana" id="semana-selector">
-                    <option value="1">Semana 1</option>
-                    <option value="2">Semana 2</option>
+                <select class="form-select" name="semana" id="semana-selector" v-model="current_week" @change="get">
+                    <option v-for="wk in weeks" :key="wk.id" :value="wk.id">{{wk.name}}</option>
                 </select>
             </div>
         </div>
@@ -24,12 +23,19 @@
                         </button>
                     </div>
                     <div class="card-body">
-                        <SelectTeam v-for="match in week[0].matches" :key="match.id" :match="match" /> 
+                        <SelectTeam v-for="match in week[0].matches" :key="match.id" :match="match" @update="saveData"/> 
                         <div class="lock-match align-middle" v-if="isLocked">
                             <span>
                                 <i class="bi-lock"></i>
                                 <br>
                                 Quiniela bloqueada
+                            </span>
+                        </div>
+                        <div class="lock-match align-middle" v-if="isLoading">
+                            <span>
+                                <div class="spinner-border text-dark" role="status">
+                                <span class="sr-only d-none">Loading...</span>
+                            </div>
                             </span>
                         </div>
                     </div>
@@ -51,34 +57,60 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref } from 'vue';
-import iziToast from "izitoast";
+import { onMounted, ref } from 'vue';
 import SelectTeam from '../components/miquiniela/SelectTeam.vue';
-import { getQuiniela } from '../api/quinielaRequests';
+import { getQuiniela, saveQuiniela, getWeeks } from '../api/quinielaRequests';
 
 
 const isLoading = ref(false)
 const isLocked = ref(false)
+const current_week = ref(0)
+const weeks = ref([])
 const week = ref([{
     matches: []
 }])
 
-function saveData(){
+async function saveData(){
     isLoading.value = true
-    setTimeout(() => {
-        isLoading.value = false
-        iziToast.success({
-            title: 'OK!',
-            message: 'Tu quiniela ha sido guardada',
-        })
-    }, 1000)
+    await saveQuiniela(current_week.value, week.value[0].matches);
+    isLoading.value = false
 }
 
 async function get(){
-    week.value = await getQuiniela(19);
+    isLoading.value = true
+    week.value = await getQuiniela(current_week.value);
+    checkIfIsLocked();
+    isLoading.value = false
+}
+
+function checkIfIsLocked(){
+    const force_open = week.value[0].is_forced_open;
+    const dateTime_to_close = new Date(week.value[0].end_date);
+
+    new Date().toLocaleString("en-US", {timeZone: "America/Denver"});
+
+    const today = new Date();
+    if(force_open){
+        isLocked.value = false;
+    }else{
+        if(dateTime_to_close > today){
+            isLocked.value = false;
+        }else{
+            isLocked.value = true;
+        }
+    }
+}
+
+async function getW(){
+    isLoading.value = true
+    weeks.value = await getWeeks();
+    weeks.value = weeks.value.sort((a, b) => (a.id > b.id) ? -1 : 1);
+    current_week.value = weeks.value[0].id;
+    isLoading.value = false
 }
 
 onMounted( async() => {
+    await getW();
     await get();
 })
 
@@ -93,6 +125,7 @@ onMounted( async() => {
 
     .card-body {
         position: relative;
+        min-height: 170px;
 
         .lock-match {
             position: absolute;
@@ -110,7 +143,7 @@ onMounted( async() => {
 
                 i {
                     color: black;
-                    font-size: 3rem;
+                    font-size: 2rem;
                 }
             }
         }
