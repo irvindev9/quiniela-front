@@ -104,7 +104,9 @@ function checkIfIsLocked(){
 async function getW(){
     isLoading.value = true
     weeks.value = await getWeeks();
-    current_week.value = weeks.value[0].id;
+    // sort by name
+    weeks.value.sort((a, b) => (a.name < b.name) ? 1 : -1);
+    current_week.value = weeks.value[week.value.length - 1].id;
     isLoading.value = false
 }
 

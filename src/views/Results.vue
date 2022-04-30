@@ -26,7 +26,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in results" :key="user.id">
+          <tr v-for="user in displayResults" :key="user.id">
             <td nowrap class="d-flex player">
               <div class="player-img">
                 <img src="https://picsum.photos/200" alt="img">
@@ -37,7 +37,8 @@
             </td>
             <td class="user-results" v-for="match in matches" :key="match.id">
               <span class="badge" :class="{'bg-success' : (match.winner_id == get_results_of_match(user.results, match.id))}">
-                <img :src="get_img_of_winner(match.winner_id)" alt="team">
+                <img :src="get_img_of_winner(user.results, match.id)" alt="team" v-if="get_img_of_winner(user.results, match.id) !== ''">
+                <i class="bi bi-question text-dark" v-else></i>
               </span>
             </td>
             <td class="text-center">
@@ -103,7 +104,6 @@ async function getW(){
   isLoading.value = true
   weeks.value = await getWeeks();
   weeks.value = weeks.value.sort((a, b) => (a.name > b.name) ? 1 : -1);
-  // current_week.value = weeks.value[0].id;
   isLoading.value = false
 }
 
@@ -114,7 +114,7 @@ async function getM(){
 }
 
 function result_of_match(match_id: number){
-  let result = matches.value.find((match: any) => match.id == match_id).winner_id
+  let result = matches.value.find((match: any) => match.id == match_id)?.winner_id
 
   return result;
 }
@@ -129,16 +129,13 @@ function get_img(logo: string) {
     return new URL(`../assets/teams/${logo}`, import.meta.url).href;
 }
 
-function get_img_of_winner(match_id: number) {
-  console.log(matches.value);
-  console.log(match_id);
+function get_img_of_winner(player_results:any, match_id: number) {
   const match = matches.value.find((match: any) => match.id == match_id);
-
-  console.log(match);
+  const player_team_id = player_results.find((player: any) => player.match_id == match_id)?.team_id;
 
   const winner = (match.winner_id == match.team_1.id) ? match.team_1.logo : match.team_2.logo;
 
-  return new URL(`../assets/teams/${winner}`, import.meta.url).href;
+  return player_team_id ? new URL(`../assets/teams/${winner}`, import.meta.url).href : '';
 }
 
 function get_results_of_match(results_of_player: any, match_id: number) {
@@ -150,7 +147,7 @@ function get_results_of_match(results_of_player: any, match_id: number) {
 onMounted(async () => {
     await getW();
     
-    current_week.value = 19;
+    current_week.value = weeks.value[weeks.value.length - 1].id;
 
     await getM();
 
@@ -163,7 +160,7 @@ onMounted(async () => {
 <style lang="scss">
 .results-container {
   .table-responsive {
-    max-height: 385px;
+    max-height: 395px;
     overflow: auto;
     
     thead tr th {
@@ -248,8 +245,6 @@ onMounted(async () => {
     }
 
     tbody {
-        max-height: 285px !important;
-        overflow-y: scroll;
       tr {
         td {
           padding: 0.2rem 0.5rem;
