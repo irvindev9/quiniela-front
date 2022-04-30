@@ -1,23 +1,33 @@
 <template>
   <div class="second-places row mx-0 px-2">
-    <div class="col-12 rounded border player py-2 my-1 shadow-sm" v-for="index in 10" :key="index">
+    <div class="col-12 rounded border player py-2 my-1 shadow-sm" v-for="player in players" :key="player.user_id">
       <div class="place-holder">
-        <span class="place">{{ (3 + index).toString().padStart(2, '0') }}.</span>
+        <span class="place">{{ (player.position).toString().padStart(2, '0') }}.</span>
       </div>
       <div class="player-img">
         <img src="https://picsum.photos/200" alt="img">
       </div>
       <div class="player-info px-3">
         <p class="mb-0">
-          <small>Jose Lopez</small>
+          <small>{{player.name}}</small>
         </p>
       </div>
       <div class="pts-holder">
-        <span class="badge rounded-pill bg-light text-dark">{{ 96 - index }} pts</span>
+        <span class="badge rounded-pill bg-light text-dark">{{ player.points }} pts</span>
       </div> &nbsp;
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+const props = defineProps({
+  players: {
+    type: Array,
+    required: true,
+    default: () => [],
+  },
+});
+</script>
 
 <style lang="scss">
 .second-places {

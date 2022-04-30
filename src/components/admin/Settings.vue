@@ -87,12 +87,6 @@ async function update() {
     await loadSeasons();
 
     isLoading.value = false;
-
-    iziToast.success({
-        message: `Se actualizó la temporada ${season.value}`,
-        position: 'topRight',
-        timeout: 10000,
-    });
 }
 
 async function updateRegister(status: number) {
