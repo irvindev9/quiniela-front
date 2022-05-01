@@ -67,7 +67,7 @@ const nameWeek = ref('')
 const matchesComponent = ref()
 
 onMounted(async () => {
-    matches.value = await getWeeks();
+    await get();
 })
 
 async function save() {
@@ -76,11 +76,17 @@ async function save() {
         date: dateTime.value
     });
 
-    matches.value = await getWeeks();
+    get();
 }
 
 async function get() {
     matches.value = await getWeeks();
+
+    matches.value.sort((a, b) => {
+        if (a.name > b.name) return -1;
+        if (a.name < b.name) return 1;
+        return 0;
+    });
 }
 
 async function deleteW(id: number) {

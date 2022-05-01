@@ -2,11 +2,12 @@
   <div class="container results-container">
     <div class="row bg-white rounded my-2">
       <div class="col-12 col-md-6 col-lg-10">
-        <h5 class="py-2">Resultados</h5>
+        <h5 class="py-2">Resultados {{get_name_current_week()}}</h5>
       </div>
       <div class="col-12 col-md-6 col-lg-2 py-2">
+        <small for="orderBy">Ordenar por</small>
         <select class="form-select form-select-sm" v-model="orderBy">
-          <option value="1">Ordenar por</option>
+          <option value="1">Registro</option>
           <option value="2">Nombre</option>
           <option value="3">Puntuación</option>
         </select>
@@ -142,6 +143,10 @@ function get_results_of_match(results_of_player: any, match_id: number) {
   let result = results_of_player.find((result: any) => result.match_id == match_id)
 
   return result ? result.team_id : 0;
+}
+
+function get_name_current_week() {
+  return weeks.value.find((week: any) => week.id == current_week.value)?.name;
 }
 
 onMounted(async () => {

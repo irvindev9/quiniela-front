@@ -91,6 +91,17 @@ onMounted(async () => {
 
 async function loadUsers() {
     users.value = await getUsers();
+
+    // sort user by name
+    users.value = users.value.sort((a, b) => {
+        if (a.name < b.name) {
+            return -1;
+        }
+        if (a.name > b.name) {
+            return 1;
+        }
+        return 0;
+    });
 }
 
 
