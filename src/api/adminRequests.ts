@@ -158,3 +158,15 @@ export const updateMatch: any = async(id: number, match: any) => {
     return data;
 }
 
+export const deleteUser: any = async(id: number) => {
+    await axios.delete(import.meta.env.VITE_API_URL + 'participants/' + id, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+        },
+    }).then((response) => {
+        toast('Usuario eliminado!', {type:'warning'});
+    }).catch((error) => {
+        toast(error.response.data.message, { type: 'error' });
+    });
+}
+

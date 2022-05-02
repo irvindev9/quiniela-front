@@ -2,6 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useUserStore } from '../stores/UserStore';
 import router from '../router';
+import { toast } from '../utils/toast';
 
 axios.defaults.withCredentials = true;
 
@@ -42,7 +43,7 @@ export const loginUser: any = async (email: string, password: string) => {
 
     router.push('/marcador');
   }).catch((err) => {
-    console.log(err);
+    toast(err.response.data.message, {type: 'warning'});
   });
 }
 
@@ -64,6 +65,6 @@ export const registerUser: any = async (data: any) => {
 
     router.push('/marcador');
   }).catch((err) => {
-    console.log(err);
+    toast(err.response.data.message, {type: 'warning'});
   });
 }

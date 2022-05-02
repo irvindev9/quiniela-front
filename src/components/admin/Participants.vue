@@ -8,6 +8,7 @@
                 <table class="table table-hover">
                     <thead>
                         <tr>
+                            <th>id</th>
                             <th>Equipo</th>
                             <th>Nombre</th>
                             <th>Número Tel.</th>
@@ -17,6 +18,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="user in users" :key="user">
+                            <td>{{user.id}}</td>
                             <td class="text-center">
                                 <img width="20" height="20" src="../../assets/teams/team_09.png" alt="team-visita">
                             </td>
@@ -41,7 +43,7 @@
                                 </span>
                             </td>
                             <td>
-                                <span class="badge rounded-pill bg-danger">
+                                <span class="badge rounded-pill bg-danger" @click="deleteUsr(user.id)">
                                     <i class="bi bi-trash"></i> 
                                     Eliminar
                                 </span>
@@ -79,7 +81,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import Modal from '../modals/Modal.vue';
-import { getUsers } from '../../api/adminRequests';
+import { getUsers, deleteUser } from '../../api/adminRequests';
 
 const newPassword = ref('');
 const modalName = ref('participantsModal');
@@ -102,6 +104,11 @@ async function loadUsers() {
         }
         return 0;
     });
+}
+
+async function deleteUsr(userId: number) {
+    await deleteUser(userId);
+    await loadUsers();
 }
 
 
