@@ -33,3 +33,21 @@ export const getWeeks = async () => {
 
   return data;
 }
+
+export const getBackgroundsImages = async () => {
+  await axios.get(import.meta.env.VITE_API_URL + 'backgrounds/images', {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+    }
+  }).then((res) => {
+    if(res.data.length > 0) {
+      const minutes = 2;
+      const random = Math.floor(Math.random() * res.data.length);
+      Cookies.set('background', res.data[random], { expires: (1 / 1440) * minutes , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
+    } else {
+      Cookies.remove('background', { path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
+    }
+  }).catch((err) => {
+    toast(err.response.data.message , { type: 'error' });
+  });
+}

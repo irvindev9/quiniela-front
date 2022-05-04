@@ -11,7 +11,7 @@
             <div class="col-12 col-md-10 col-lg-8 col-xl-6">
                 <div id="mi-quiniela" class="card">
                     <div class="card-header bg-light d-flex justify-content-between">
-                        <h5 class="m-0">Tu quiniela: Usuario</h5>
+                        <h5 class="m-0">Tu quiniela: {{userStore.name}}</h5>
                         <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" v-if="!isLocked">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -60,6 +60,10 @@
 import { onMounted, ref } from 'vue';
 import SelectTeam from '../components/miquiniela/SelectTeam.vue';
 import { getQuiniela, saveQuiniela, getWeeks } from '../api/quinielaRequests';
+import { useUserStore } from '../stores/UserStore';
+
+const userStore = useUserStore();
+
 
 
 const isLoading = ref(false)
@@ -72,7 +76,9 @@ const week = ref([{
 
 async function saveData(){
     isLoading.value = true
-    await saveQuiniela(current_week.value, week.value[0].matches);
+    if(current_week.value > 0){
+        await saveQuiniela(current_week.value, week.value[0].matches);
+    }
     isLoading.value = false
 }
 
@@ -105,14 +111,20 @@ async function getW(){
     isLoading.value = true
     weeks.value = await getWeeks();
     // sort by name
-    weeks.value.sort((a, b) => (a.name < b.name) ? 1 : -1);
-    current_week.value = weeks.value[week.value.length - 1].id;
+    if(weeks.value.length > 0){
+        weeks.value.sort((a, b) => (a.name < b.name) ? 1 : -1);
+        current_week.value = weeks.value[week.value.length - 1]?.id;
+    } else {
+        current_week.value = 0;
+    }
     isLoading.value = false
 }
 
 onMounted( async() => {
     await getW();
-    await get();
+    if (current_week.value !== 0) {
+        await get();
+    }
 })
 
 </script>

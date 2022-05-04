@@ -9,11 +9,11 @@
                 <div class="modal-body text-start">
                     <div class="mb-3">
                         <label class="form-label">Password</label>
-                        <input type="text" class="form-control form-control-sm">
+                        <input type="password" class="form-control form-control-sm" v-model="password">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Confirmar</label>
-                        <input type="text" class="form-control form-control-sm">
+                        <input type="password" class="form-control form-control-sm" v-model="confirmPassword">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -21,7 +21,7 @@
                         <i class="bi bi-x"></i> 
                         Cancelar
                     </button>
-                    <button type="button" class="btn btn-outline-success btn-sm">
+                    <button type="button" class="btn btn-outline-success btn-sm" data-bs-dismiss="modal" @click="updateUser">
                         <i class="bi bi-send"></i> 
                         Guardar
                     </button>
@@ -34,6 +34,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { updatePassword } from '../../api/adminRequests';
 
 const props = defineProps({
     modalName: {
@@ -43,6 +44,23 @@ const props = defineProps({
     title: {
         type: String,
         default: ''
+    },
+    userId: {
+        type: Number,
+        default: 0
     }
-})
+});
+
+const password = ref('');
+const confirmPassword = ref('');
+
+async function updateUser() {
+    if(props.userId === 0) {
+        return;
+    }
+
+    await updatePassword(props.userId, password.value, confirmPassword.value);
+    password.value = '';
+    confirmPassword.value = '';
+}
 </script>

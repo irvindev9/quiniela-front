@@ -21,10 +21,8 @@
     </div>
     <div class="form-group">
         <label for="team">Equipo</label>
-        <select class="form-control" id="team">
-            <option value="0">Selecciona una opción</option>
-            <option>Miami Dolphins</option>
-            <option>Buffalo Bills</option>
+        <select class="form-control" id="team" v-model="favorite_team">
+            <option v-for="team in team_options" :key="team.id" :value="team.id">{{team.name}}</option>
         </select>
     </div>
     <div class="form-group mt-3 text-end">
@@ -46,12 +44,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { registerUser } from '../../api/sessionRequests';
+import { teams } from '../../utils/teams';
 
 const whatsNumber = ref('');
 const password = ref('');
 const password_confirm = ref('');
 const name = ref('');
 const isLoading = ref(false);
+const team_options = ref(teams());
+const favorite_team = ref(1);
 
 async function register() {
   isLoading.value = true;
@@ -60,7 +61,8 @@ async function register() {
     email: whatsNumber.value,
     password: password.value,
     password_confirmation: password_confirm.value,
-    name: name.value
+    name: name.value, 
+    favorite_team: favorite_team.value
   });
 
   isLoading.value = false;

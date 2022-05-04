@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="app" :style="{'background-image': 'url(' + background + ')'}">
     <Header v-if="route.name !== 'Home'" />
     <router-view />
   </div>
@@ -11,9 +11,11 @@ import Cookies from 'js-cookie';
 import iziToast from "izitoast";
 import { useRoute } from 'vue-router'
 import { useUserStore } from './stores/UserStore'
-import { onBeforeMount } from 'vue';
+import { ref, onBeforeMount } from 'vue';
+import { getBackgroundsImages } from './api/quinielaRequests';
 
 const route = useRoute()
+const background = ref(Cookies.get('background'))
 
 if (!Cookies.get('cookies-advice')){
   iziToast.info({
@@ -31,20 +33,24 @@ if (!Cookies.get('cookies-advice')){
   })
 }
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   if (Cookies.get('user-info') && Cookies.get('sanctum-session')) {
     const userStore = useUserStore()
     const data = JSON.parse(Cookies.get('user-info')!)
     userStore.updateUserInfo(data, Cookies.get('sanctum-session'))
   }
+
+  if(Cookies.get('background')) {
+    background.value = Cookies.get('background')
+  }else{
+    background.value = new URL("./assets/background.jpg", import.meta.url).href;
+    await getBackgroundsImages()
+  }
 })
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.app {
   background-image: url("./assets/background.jpg");
   background-size: cover;
   background-repeat: no-repeat;

@@ -7,7 +7,6 @@ import { toast } from '../utils/toast';
 axios.defaults.withCredentials = true;
 
 export const getUserInfo: any  = (token: string) => {
-  const userStore = useUserStore();
   return axios.get(import.meta.env.VITE_API_URL + 'user', {
     headers: {
       Authorization: `Bearer ${token}`,

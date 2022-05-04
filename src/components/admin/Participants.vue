@@ -20,13 +20,13 @@
                         <tr v-for="user in users" :key="user">
                             <td>{{user.id}}</td>
                             <td class="text-center">
-                                <img width="20" height="20" src="../../assets/teams/team_09.png" alt="team-visita">
+                                <img width="20" height="20" :src="get_img(user.team.logo)" alt="team-visita">
                             </td>
                             <td>
                                 <span>
                                     <i class="bi bi-person-circle"></i>
                                     {{user.name}}
-                                    <span class="badge rounded-pill bg-primary edit">
+                                    <span class="badge rounded-pill bg-primary edit" data-bs-toggle="modal" :data-bs-target="'#' + modalNameN" @click="activeUserId = user.id">
                                         <i class="bi bi-pencil"></i> 
                                         Editar
                                     </span>
@@ -36,7 +36,7 @@
                                 <span>
                                     <i class="bi bi-phone"></i>
                                     {{user.email}}
-                                    <span class="badge rounded-pill bg-primary edit">
+                                    <span class="badge rounded-pill bg-primary edit" @click="loginAsUser(user.id)">
                                         <i class="bi bi-door-open"></i>
                                         Login
                                     </span>
@@ -48,12 +48,13 @@
                                     Eliminar
                                 </span>
                                 <br>
-                                <span class="badge rounded-pill bg-secondary" :class="{'pressed': users.id < 3}">
-                                    <i class="bi bi-eye-slash"></i>
-                                    Ocultar
+                                <span class="badge rounded-pill bg-secondary" :class="{'pressed': user.is_hide }" @click="updateUser(user.id, {is_hide: (user.is_hide == 1 ? 0 : 1)})">
+                                    <i class="bi bi-eye-slash" v-if="user.is_hide == 0"></i>
+                                    <i class="bi bi-eye" v-else></i>
+                                    {{ user.is_hide === 0 ? 'Ocultar' : 'Mostrar' }}
                                 </span>
                                 <br>
-                                <span class="badge rounded-pill bg-success" :class="{'pressed': user.id < 3}">
+                                <span class="badge rounded-pill bg-success" :class="{ 'pressed': user.is_paid }" @click="updateUser(user.id, {is_paid: (user.is_paid == 1 ? 0 : 1)})">
                                     <i class="bi bi-cash-coin"></i>
                                     Pagado
                                 </span>
@@ -64,7 +65,7 @@
                                 </span>
                             </td>
                             <td>
-                                <span class="badge rounded-pill bg-warning" data-bs-toggle="modal" :data-bs-target="'#' + modalName">
+                                <span class="badge rounded-pill bg-warning" data-bs-toggle="modal" :data-bs-target="'#' + modalName" @click="activeUserId = user.id">
                                     <i class="bi bi-question-diamond"></i>
                                     Cambiar password
                                 </span>
@@ -74,18 +75,25 @@
                 </table>
             </div>
         </div>
-        <Modal :modalName="modalName" title="Cambiar password"/>
+        <ModalPassword :modalName="modalName" title="Cambiar password" :userId="activeUserId"/>
+        <ModalName :modalName="modalNameN" :userId="activeUserId" @getUsers="loadUsers"/>
     </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import Modal from '../modals/Modal.vue';
-import { getUsers, deleteUser } from '../../api/adminRequests';
+import { useRouter } from 'vue-router';
+import ModalPassword from '../modals/ModalPassword.vue';
+import ModalName from '../modals/ModalName.vue';
+import { getUsers, deleteUser, updateUserStatus, loginAsUser } from '../../api/adminRequests';
 
 const newPassword = ref('');
 const modalName = ref('participantsModal');
+const modalNameN = ref('participantsModalName');
 const users = ref([]);
+const activeUserId = ref(0);
+
+const router = useRouter();
 
 onMounted(async () => {
     await loadUsers();
@@ -93,17 +101,6 @@ onMounted(async () => {
 
 async function loadUsers() {
     users.value = await getUsers();
-
-    // sort user by name
-    users.value = users.value.sort((a, b) => {
-        if (a.name < b.name) {
-            return -1;
-        }
-        if (a.name > b.name) {
-            return 1;
-        }
-        return 0;
-    });
 }
 
 async function deleteUsr(userId: number) {
@@ -111,7 +108,18 @@ async function deleteUsr(userId: number) {
     await loadUsers();
 }
 
+async function updateUser(userId: number, ...params: any) {
+    await updateUserStatus(userId, ...params);
+    await loadUsers();
+}
 
+async function login(userId: number) {
+    await loginAsUser(userId);
+}
+
+function get_img(logo: string) {
+    return new URL(`../../assets/teams/${logo}`, import.meta.url).href;
+}
 </script>
 
 <style lang="scss">

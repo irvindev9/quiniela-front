@@ -37,9 +37,12 @@
               </small>
             </td>
             <td class="user-results" v-for="match in matches" :key="match.id">
-              <span class="badge" :class="{'bg-success' : (match.winner_id == get_results_of_match(user.results, match.id))}">
+              <span class="badge" :class="{'bg-success' : (match.winner_id == get_results_of_match(user.results, match.id))}" v-if="isActive">
                 <img :src="get_img_of_winner(user.results, match.id)" alt="team" v-if="get_img_of_winner(user.results, match.id) !== ''">
                 <i class="bi bi-question text-dark" v-else></i>
+              </span>
+              <span v-else>
+                <i class="bi bi-stopwatch"></i>
               </span>
             </td>
             <td class="text-center">
@@ -53,12 +56,12 @@
     </div>
     <div class="row bg-white rounded my-2 footer">
       <div class="col-12 col-md-6 col-lg-10 py-2">
-        <nav aria-label="Page navigation example">
+        <nav>
           <ul class="pagination justify-content-start my-0">
             <li class="page-item disabled">
               <a class="page-link">Semana</a>
             </li>
-            <li v-for="li in weeks" :key="li.id" class="page-item">
+            <li v-for="li in weeks" :key="li.id" class="page-item" :class="{'active' : (li.id == current_week)}">
               <a class="page-link" href="#" @click="changeWeek(li.id)">
                 {{ li.name.replace('Semana ', '') }}
               </a>
@@ -81,6 +84,13 @@ const current_week = ref(0)
 const orderBy = ref(1)
 const results = ref([])
 const matches = ref([])
+
+const isActive = computed(() => {
+  // get end_date of current week
+  const current_week_end_date = weeks.value.find(week => week.id === current_week.value).end_date
+
+  return new Date() > new Date(current_week_end_date)
+})
 
 const displayResults = computed(() => {
   if(results.value.length > 0) {
@@ -270,6 +280,10 @@ onMounted(async () => {
 
   .row.footer {
     overflow: auto;
+
+    .page-link:focus {
+      box-shadow: none;
+    }
   }
 }
 </style>
