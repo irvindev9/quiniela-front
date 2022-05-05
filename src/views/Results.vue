@@ -39,7 +39,7 @@
             </td>
             <td class="user-results" v-for="match in matches" :key="match.id">
               <span class="badge" :class="{'bg-success' : (match.winner_id == get_results_of_match(user.results, match.id))}" v-if="isActive">
-                <img :src="get_img_of_winner(user.results, match.id)" alt="team" v-if="get_img_of_winner(user.results, match.id) !== ''">
+                <img :src="get_img_of_selection(user.results, match.id)" alt="team" v-if="get_img_of_selection(user.results, match.id) !== ''">
                 <i class="bi bi-question text-dark" v-else></i>
               </span>
               <span v-else>
@@ -125,12 +125,6 @@ async function getM(){
   isLoading.value = false
 }
 
-function result_of_match(match_id: number){
-  let result = matches.value.find((match: any) => match.id == match_id)?.winner_id
-
-  return result;
-}
-
 async function changeWeek(id: number) {
   current_week.value = id;
   await getM();
@@ -141,11 +135,11 @@ function get_img(logo: string) {
     return new URL(`../assets/teams/${logo}`, import.meta.url).href;
 }
 
-function get_img_of_winner(player_results:any, match_id: number) {
+function get_img_of_selection(player_results:any, match_id: number) {
   const match = matches.value.find((match: any) => match.id == match_id);
   const player_team_id = player_results.find((player: any) => player.match_id == match_id)?.team_id;
 
-  const winner = (match.winner_id == match.team_1.id) ? match.team_1.logo : match.team_2.logo;
+  const winner = (player_team_id == match.team_1.id) ? match.team_1.logo : match.team_2.logo;
 
   return player_team_id ? new URL(`../assets/teams/${winner}`, import.meta.url).href : '';
 }
@@ -168,8 +162,6 @@ onMounted(async () => {
     await getM();
 
     results.value = await getResults(current_week.value);
-
-    result_of_match(30);
 });
 </script>
 

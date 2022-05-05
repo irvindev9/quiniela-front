@@ -96,10 +96,11 @@ function checkIfIsLocked(){
     new Date().toLocaleString("en-US", {timeZone: "America/Denver"});
 
     const today = new Date();
-    if(force_open){
+
+    if(dateTime_to_close >= today){
         isLocked.value = false;
     }else{
-        if(dateTime_to_close >= today){
+        if(force_open){
             isLocked.value = false;
         }else{
             isLocked.value = true;

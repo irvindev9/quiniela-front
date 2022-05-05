@@ -33,6 +33,7 @@
                         <div class="accordion-body">
                             <div class="row">
                                 <div class="col-12 text-end">
+                                    <small class="text-muted mx-5">Cierra el: {{match.end_date}}</small>
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                         <button type="button" class="btn btn-sm btn-outline-danger" @click="deleteW(match.id)">
                                             <i class="bi bi-trash"></i> 
@@ -41,7 +42,7 @@
                                         <button type="button" class="btn btn-sm btn-outline-secondary" @click="update(match.id)">
                                             <i class="bi bi-door-open" v-if="match.is_forced_open"></i>
                                             <i class="bi bi-door-closed" v-else></i>
-                                            {{ match.is_forced_open ? 'Abrir' : 'Cerrar' }} semana
+                                            {{ match.is_forced_open ? 'Cerrar' : 'Abrir' }} semana
                                         </button>
                                     </div>
                                 </div>

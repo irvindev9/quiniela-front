@@ -10,6 +10,9 @@ export const useUserStore = defineStore('user', {
       id: null,
       name: null,
       role_id: null,
+      team_img: null,
+      is_paid: null,
+      img: null,
     }
   },
   // actions
@@ -21,6 +24,8 @@ export const useUserStore = defineStore('user', {
       this.id = userInfo.id;
       this.name = userInfo.name;
       this.role_id = userInfo.role_id;
+      this.team_img = userInfo.team.logo; 
+      this.img = userInfo.img; 
     }, 
     logout() {
       this.token = null;

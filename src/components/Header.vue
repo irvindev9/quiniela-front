@@ -30,6 +30,7 @@
                                 {{userStore.name}}
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" href="#" @click="redirect('/')">Perfil</a></li>
                                 <li><a class="dropdown-item" href="#" @click="logout">Cerrar sesión</a></li>
                             </ul>
                         </li>

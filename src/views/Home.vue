@@ -7,6 +7,9 @@
                 <Register v-if="page == 'register'" @changeBetweenPages="changeBetweenPages" />
                 <Login v-if="page == 'login'" @changeBetweenPages="changeBetweenPages" />
             </div>  
+            <div class="profile-content">
+                <Profile v-if="page == 'profile'" @changeBetweenPages="changeBetweenPages" />
+            </div>
         </div>
         <div class="title-container d-flex align-items-center justify-content-center">
             <div class="circle-container">
@@ -21,10 +24,18 @@
 import { ref } from 'vue'
 import Register from '../components/home/Register.vue';
 import Login from '../components/home/Login.vue';
+import Profile from '../components/home/Profile.vue';
 import HeaderRegister from '../components/home/HeaderRegister.vue';
+import { useUserStore } from '../stores/UserStore';
 
 const player = ref('');
 const page = ref('login');
+const userStore = useUserStore();
+
+if(userStore.name) {
+    page.value = 'profile';
+}
+
 player.value = new URL(`../assets/home_players/player_${Math.floor(Math.random() * (5 - 0))}.png`, import.meta.url).href;
 
 function changeBetweenPages() {
