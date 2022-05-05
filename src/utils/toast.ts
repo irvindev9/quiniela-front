@@ -1,35 +1,31 @@
 import iziToast from "izitoast";
 
-export const toast = (message: string, { type = "success", timeout = 5000 }: { type?: string; timeout?: number }) => {
+export const toast = (message: string, { type = "success", timeout = 5000, color = '', position = 'topRight' }: { type?: string; timeout?: number; color?: string; position?: string  }) => {
+  const options = {
+    message,
+    position,
+    timeout,
+  };
+
+  if (color !== '') {
+    options.color = color;
+  }
+
   switch(type) {
     case "success":
-      iziToast.success({
-        title: "",
-        message: message,
-        timeout: timeout,
-      });
+      iziToast.success(options);
       break;
     case "error":
-      iziToast.error({
-        title: "",
-        message: message,
-        timeout: timeout,
-      });
+      iziToast.error(options);
       break;
     case "warning":
-      iziToast.warning({
-        title: "",
-        message: message,
-        timeout: timeout,
-      });
+      iziToast.warning(options);
       break;
     case "info":
-      iziToast.info({
-        title: "",
-        message: message,
-        timeout: timeout,
-      });
+      iziToast.info(options);
       break;
+    default:
+      iziToast.show(options);
   }
 
 }

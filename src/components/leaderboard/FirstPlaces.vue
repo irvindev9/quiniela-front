@@ -2,7 +2,8 @@
   <div class="first-places row mx-0">
     <div class="col second-place" v-if="props.players[1]">
       <div class="circle shadow-sm">
-        <img src="https://picsum.photos/200" alt="img">
+        <img :src="props.players[1].img" alt="img" v-if="props.players[1].img">
+        <img src="../../assets/default_user.png" alt="img" v-else>
         <div class="place-holder">
           <span>{{props.players[1].position}}</span>
         </div>
@@ -15,8 +16,8 @@
     </div>
     <div class="col" v-if="props.players[0]">
       <div class="circle shadow-sm">
-        <img :src="getGravatarURL('irvin_21_95@hotmail.com')" alt="img">
-        <!-- <img src="https://picsum.photos/200" alt="img"> -->
+        <img :src="props.players[0].img" alt="img" v-if="props.players[0].img">
+        <img src="../../assets/default_user.png" alt="img" v-else>
         <div class="place-holder">
           <span>{{props.players[0].position}}</span>
         </div>
@@ -29,7 +30,8 @@
     </div>
     <div class="col second-place" v-if="props.players[2]">
       <div class="circle shadow-sm">
-        <img src="https://picsum.photos/200" alt="img">
+        <img :src="props.players[2].img" alt="img" v-if="props.players[2].img">
+        <img src="../../assets/default_user.png" alt="img" v-else>
         <div class="place-holder">
           <span>{{props.players[2].position}}</span>
         </div>
@@ -44,8 +46,6 @@
 </template>
 
 <script setup lang="ts">
-import md5 from 'md5';
-
 const props = defineProps({
   players: {
     type: Array,
@@ -53,12 +53,6 @@ const props = defineProps({
     default: () => [],
   },
 });
-
-function getGravatarURL( email:string ) {
-  const address = String( email ).trim().toLowerCase();
-  const hash = md5( address );
-  return `https://www.gravatar.com/avatar/${ hash }`;
-}
 </script>
 
 <style lang="scss">

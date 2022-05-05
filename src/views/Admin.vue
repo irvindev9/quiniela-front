@@ -33,6 +33,9 @@ import AddMatch from "../components/admin/AddMatch.vue";
 import Participants from "../components/admin/Participants.vue";
 import Backgrounds from "../components/admin/Backgrounds.vue";
 import Settings from "../components/admin/Settings.vue";
+import { useUserStore } from "../stores/UserStore";
+import { mapStores } from "pinia";
+
 
 const active: string = 'active bg-light border border-light';
 
@@ -42,6 +45,7 @@ export default defineComponent({
         AddMatch, Participants, Backgrounds, Settings
     },
     computed: {
+        ...mapStores(useUserStore),
         section(){
             switch(this.$route.query.section){
                 case "add-match":
@@ -72,7 +76,15 @@ export default defineComponent({
                 }
             });
         }
+    },
+    mounted(){
+        if(this.userStore.role_id !== 1){
+            this.$router.push({
+                name: 'Marcador'
+            });
+        }
     }
+    
 })
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="app" :style="{'background-image': 'url(' + background + ')'}">
+  <div class="app px-0 mx-0" :style="{'background-image': `url('` + background + `')`}">
     <Header v-if="route.name !== 'Home'" />
     <router-view />
   </div>
@@ -13,6 +13,7 @@ import { useRoute } from 'vue-router'
 import { useUserStore } from './stores/UserStore'
 import { ref, onBeforeMount } from 'vue';
 import { getBackgroundsImages } from './api/quinielaRequests';
+import { checkNotifications } from './utils/notifications';
 
 const route = useRoute()
 const background = ref(Cookies.get('background'))
@@ -46,16 +47,26 @@ onBeforeMount(async () => {
     background.value = new URL("./assets/background.jpg", import.meta.url).href;
     await getBackgroundsImages()
   }
+
+  await checkNotifications();
 })
 </script>
 
 <style>
-.app {
+.app_background {
   background-image: url("./assets/background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  overflow-y: auto;
+}
+.app {
+  /* background-image: url("./assets/background.jpg"); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>

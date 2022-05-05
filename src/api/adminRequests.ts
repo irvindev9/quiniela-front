@@ -271,3 +271,52 @@ export const deleteBackground = async(name: string) => {
     });
 }
 
+export const uploadUserPhoto = async(userId: number, file: any) => {
+    await axios.post(import.meta.env.VITE_API_URL + 'participants/' + userId + '/photo', file, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+            'Content-Type': 'multipart/form-data',
+        },
+    }).then((response) => {
+        toast('ok!', {});
+    }).catch((error) => {
+        toast(error.response.data.message, { type: 'warning' });
+        if(error.response.data.errors)
+            toast(JSON.stringify(error.response.data.errors), { type: 'error' });
+    });
+}
+
+export const saveNotification = async(notification: any) => {
+    await axios.post(import.meta.env.VITE_API_URL + 'notifications', notification, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+        },
+    }).then((response) => {
+        toast('ok!', {});
+    }).catch((error) => {
+        toast(error.response.data.message, { type: 'error' });
+    });
+}
+
+export const getNotifications = async() => {
+    const { data } = await axios.get(import.meta.env.VITE_API_URL + 'notifications', {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+        },
+    });
+
+    return data;
+}
+
+export const deleteNotification = async(id: number) => {
+    await axios.delete(import.meta.env.VITE_API_URL + 'notifications/' + id, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+        },
+    }).then((response) => {
+        toast('ok!', {});
+    }).catch((error) => {
+        toast(error.response.data.message, { type: 'error' });
+    });
+}
+

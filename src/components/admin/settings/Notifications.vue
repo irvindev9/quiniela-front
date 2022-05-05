@@ -53,11 +53,11 @@
                 <input class="form-check-input" type="radio" v-model="position" id="inlineRadio4" value="bottomLeft">
                 <label class="form-check-label" for="inlineRadio4">Abajo-Izquierda</label>
             </div>
-            <button class="btn btn-primary btn-sm mt-4" @click="preview">
+            <button class="btn btn-primary btn-sm mt-4" @click="previewNotification(message, color, position)">
                 <i class="bi bi-eye"></i> 
                 Previsualizar
             </button>
-            <button class="btn btn-primary btn-sm mx-1 mt-4">
+            <button class="btn btn-primary btn-sm mx-1 mt-4" @click="save">
                 <i class="bi bi-send"></i> 
                 Guardar
             </button>
@@ -78,19 +78,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="index in 10" :key="index" class="notification-tr">
-                        <td>1</td>
-                        <td>Mensaje de prueba</td>
-                        <td>2020-01-01</td>
-                        <td class="text-info" :style="{'color': 'rgba(157,222,255,.9)'}">rgba(157,222,255,.9)</td>
-                        <td>topRight</td>
+                    <tr v-for="notification in notifications" :key="notification.id" class="notification-tr">
+                        <td>{{notification.id}}</td>
+                        <td>{{notification.message}}</td>
+                        <td>{{notification.active_to}}</td>
+                        <td :style="{'color': notification.color, 'background-color': notification.color}">{{notification.color}}</td>
+                        <td>{{notification.position}}</td>
                         <td>
-                            <span class="badge bg-primary rounded-pill" @click="previewNotification('Mensaje de prueba', 'rgba(157,222,255,.9)', 'topRight')">
+                            <span class="badge bg-primary rounded-pill" @click="previewNotification(notification.message, notification.color, notification.position)">
                                 <i class="bi bi-eye"></i> 
                                 Ver
                             </span>
                             <br>
-                            <span class="badge bg-danger rounded-pill">
+                            <span class="badge bg-danger rounded-pill" @click="deleteN(notification.id)">
                                 <i class="bi bi-trash"></i> 
                                 Eliminar
                             </span>
@@ -104,25 +104,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
+import { onMounted, ref, Ref } from 'vue'
 import iziToast from 'izitoast';
 import { IziToastPosition } from 'izitoast';
+import { saveNotification, getNotifications, deleteNotification } from '../../../api/adminRequests';
 
 const color = ref('rgba(157,222,255,.9)');
 const position: Ref<IziToastPosition> = ref('topRight');
 const message = ref('');
 const activeUntil = ref('');
+const notifications = ref([]);
 
-function preview() {
-    iziToast.show({
-        title: '',
-        message: message.value,
-        color: color.value,
-        position: position.value,
-        close: true,
-        timeout: 10000,
-    });
-}
+onMounted(async () => {
+    notifications.value = await getNotifications();
+});
 
 function previewNotification(message: string, color: string, position: IziToastPosition) {
     iziToast.show({
@@ -133,6 +128,16 @@ function previewNotification(message: string, color: string, position: IziToastP
         close: true,
         timeout: 10000,
     });
+}
+
+async function save() {
+    await saveNotification({message: message.value, active_to: activeUntil.value, color: color.value, position: position.value});
+    notifications.value = await getNotifications();
+}
+
+async function deleteN(id: number) {
+    await deleteNotification(id);
+    notifications.value = await getNotifications();
 }
 </script>
 

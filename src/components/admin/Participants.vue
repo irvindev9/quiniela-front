@@ -24,7 +24,7 @@
                             </td>
                             <td>
                                 <span>
-                                    <i class="bi bi-person-circle"></i>
+                                    <i class="bi bi-person-circle" data-bs-toggle="modal" :data-bs-target="'#' + modalImage" @click="activeUserId = user.id"></i>
                                     {{user.name}}
                                     <span class="badge rounded-pill bg-primary edit" data-bs-toggle="modal" :data-bs-target="'#' + modalNameN" @click="activeUserId = user.id">
                                         <i class="bi bi-pencil"></i> 
@@ -77,6 +77,7 @@
         </div>
         <ModalPassword :modalName="modalName" title="Cambiar password" :userId="activeUserId"/>
         <ModalName :modalName="modalNameN" :userId="activeUserId" @getUsers="loadUsers"/>
+        <ModalImage :modalName="modalImage" :userId="activeUserId" @getUsers="loadUsers"/>
     </div>
 </template>
 
@@ -85,11 +86,13 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ModalPassword from '../modals/ModalPassword.vue';
 import ModalName from '../modals/ModalName.vue';
+import ModalImage from '../modals/ModalImage.vue';
 import { getUsers, deleteUser, updateUserStatus, loginAsUser } from '../../api/adminRequests';
 
 const newPassword = ref('');
 const modalName = ref('participantsModal');
 const modalNameN = ref('participantsModalName');
+const modalImage = ref('participantsModalImage');
 const users = ref([]);
 const activeUserId = ref(0);
 
@@ -140,6 +143,10 @@ function get_img(logo: string) {
         box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5);
         background-color: white !important;
         color: grey;
+    }
+
+    .bi-person-circle {
+        cursor: pointer;
     }
 }
 </style>

@@ -5,7 +5,8 @@
         <span class="place">{{ (player.position).toString().padStart(2, '0') }}.</span>
       </div>
       <div class="player-img">
-        <img src="https://picsum.photos/200" alt="img">
+        <img :src="player.img" alt="img" v-if="player.img">
+        <img src="../../assets/default_user.png" alt="img" v-else>
       </div>
       <div class="player-info px-3">
         <p class="mb-0">

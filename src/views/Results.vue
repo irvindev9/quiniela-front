@@ -30,7 +30,8 @@
           <tr v-for="user in displayResults" :key="user.id">
             <td nowrap class="d-flex player">
               <div class="player-img">
-                <img src="https://picsum.photos/200" alt="img">
+                <img :src="user.img" alt="img" v-if="user.img">
+                <img src="../assets/default_user.png" alt="img" v-else>
               </div>
               <small>
                 {{user.name}}
