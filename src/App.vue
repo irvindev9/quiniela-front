@@ -11,7 +11,7 @@ import Cookies from 'js-cookie';
 import iziToast from "izitoast";
 import { useRoute } from 'vue-router'
 import { useUserStore } from './stores/UserStore'
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, onUpdated } from 'vue';
 import { getBackgroundsImages } from './api/quinielaRequests';
 import { checkNotifications } from './utils/notifications';
 
@@ -41,14 +41,18 @@ onBeforeMount(async () => {
     userStore.updateUserInfo(data, Cookies.get('sanctum-session'))
   }
 
+  await checkNotifications();
+})
+
+onUpdated(async () => {
   if(Cookies.get('background')) {
-    background.value = Cookies.get('background')
+    if(background.value !== Cookies.get('background')) {
+      background.value = Cookies.get('background')
+    }
   }else{
     background.value = new URL("./assets/background.jpg", import.meta.url).href;
     await getBackgroundsImages()
   }
-
-  await checkNotifications();
 })
 </script>
 
