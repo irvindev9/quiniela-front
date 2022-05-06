@@ -8,12 +8,7 @@ export const checkNotifications: any = async () => {
   let msg = 100;
 
   Object.entries(notifications).forEach(([key, value]) => {
-    // console.log(key, value);
-    console.log({key, value});
-    if(Cookies.get('noti' + value.id)) {
-      // console.log("ya existe");
-    }else{
-      // console.log("no existe");
+    if(!Cookies.get('noti' + value.id)) {
       setTimeout(() => {
         toast(value.message, {
           type: "show",
@@ -25,5 +20,4 @@ export const checkNotifications: any = async () => {
       Cookies.set('noti' + value.id, 'true', { expires: 1 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
     }
   });
-
 }
