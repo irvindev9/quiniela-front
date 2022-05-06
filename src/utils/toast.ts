@@ -1,7 +1,8 @@
 import iziToast from "izitoast";
+import { IziToastSettings, IziToastPosition } from "izitoast";
 
-export const toast = (message: string, { type = "success", timeout = 5000, color = '', position = 'topRight' }: { type?: string; timeout?: number; color?: string; position?: string  }) => {
-  const options = {
+export const toast = (message: string, { type = "success", timeout = 5000, color = '', position = 'topRight' }: { type?: string; timeout?: number; color?: string; position?: IziToastPosition  }) => {
+  const options: IziToastSettings = {
     message,
     position,
     timeout,
