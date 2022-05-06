@@ -66,13 +66,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { Ref, ref, onMounted } from 'vue';
 import { toast } from '../../utils/toast';
 import { uploadBackgroundFile, getAllBackgrounds, deleteBackground } from '../../api/adminRequests';
+import { Backgrounds } from '../../models/Backgrounds';
 
 const isLoading = ref(false)
 const file = ref(null)
-const backgrounds = ref([])
+const backgrounds: Ref<Backgrounds> = ref([])
 
 onMounted(async () => {
     backgrounds.value = await getAllBackgrounds()

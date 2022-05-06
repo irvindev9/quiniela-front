@@ -57,10 +57,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, Ref, ref } from 'vue';
 import SelectTeam from '../components/miquiniela/SelectTeam.vue';
 import { getQuiniela, saveQuiniela, getWeeks } from '../api/quinielaRequests';
 import { useUserStore } from '../stores/UserStore';
+import { Weeks, Week } from '../models/Quinielas';
 
 const userStore = useUserStore();
 
@@ -69,8 +70,8 @@ const userStore = useUserStore();
 const isLoading = ref(false)
 const isLocked = ref(false)
 const current_week = ref(0)
-const weeks = ref([])
-const week = ref([{
+const weeks: Ref<Weeks> = ref([])
+const week: Ref<Week | any> = ref([{
     matches: []
 }])
 

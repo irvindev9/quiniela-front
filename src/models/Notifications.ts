@@ -5,4 +5,9 @@ export type Notification = {
   message: string;
   position: IziToastPosition;
   color: string;
+  active_to: Date;
+}
+
+export type Notifications = {
+  [key: number]: Notification;
 }

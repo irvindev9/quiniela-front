@@ -19,9 +19,9 @@
           <tr>
             <th></th>
             <th class="vs-teams" v-for="match in matches" :key="match.id" nowrap>
-              <img :src="get_img(match.team_1.logo)" alt="team">
+              <img :src="get_img(match.team_1.logo)" alt="team" v-if="match.team_1?.logo">
               <span>vs</span>
-              <img :src="get_img(match.team_2.logo)" alt="team">
+              <img :src="get_img(match.team_2.logo)" alt="team" v-if="match.team_2?.logo">
             </th>
             <th>Puntos</th>
           </tr>
@@ -75,20 +75,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, Ref, ref, computed } from 'vue';
 import { getWeeks } from '../api/quinielaRequests';
 import { getResults, getMatchs } from '../api/resultsRequests';
+import { Weeks, Matches, UserResults, Week } from '../models/Quinielas';
 
 const isLoading = ref(false)
-const weeks = ref([])
+const weeks: Ref<Weeks> = ref([])
 const current_week = ref(0)
 const orderBy = ref(1)
-const results = ref([])
-const matches = ref([])
+const results: Ref<UserResults> = ref([])
+const matches: Ref<Matches> = ref([])
 
 const isActive = computed(() => {
   // get end_date of current week
-  const current_week_end_date = weeks.value.find(week => week.id === current_week.value).end_date
+  const current_week_end_date = weeks.value.find((week: Week) => week.id === current_week.value).end_date
 
   return new Date() > new Date(current_week_end_date)
 })

@@ -17,7 +17,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="user in users" :key="user">
+                        <tr v-for="user in users" :key="user.id">
                             <td>{{user.id}}</td>
                             <td class="text-center">
                                 <img width="20" height="20" :src="get_img(user.team.logo)" alt="team-visita">
@@ -82,18 +82,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, Ref, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import ModalPassword from '../modals/ModalPassword.vue';
 import ModalName from '../modals/ModalName.vue';
 import ModalImage from '../modals/ModalImage.vue';
 import { getUsers, deleteUser, updateUserStatus, loginAsUser } from '../../api/adminRequests';
+import { Users } from '../../models/Users';
 
 const newPassword = ref('');
 const modalName = ref('participantsModal');
 const modalNameN = ref('participantsModalName');
 const modalImage = ref('participantsModalImage');
-const users = ref([]);
+const users: Ref<Users> = ref([]);
 const activeUserId = ref(0);
 
 const router = useRouter();

@@ -108,12 +108,13 @@ import { onMounted, ref, Ref } from 'vue'
 import iziToast from 'izitoast';
 import { IziToastPosition } from 'izitoast';
 import { saveNotification, getNotifications, deleteNotification } from '../../../api/adminRequests';
+import { Notifications } from '../../../models/Notifications';
 
 const color = ref('rgba(157,222,255,.9)');
 const position: Ref<IziToastPosition> = ref('topRight');
 const message = ref('');
 const activeUntil = ref('');
-const notifications = ref([]);
+const notifications: Ref<Notifications> = ref([]);
 
 onMounted(async () => {
     notifications.value = await getNotifications();

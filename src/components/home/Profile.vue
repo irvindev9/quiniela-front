@@ -81,7 +81,6 @@ onMounted(async() => {
   .container {
     border: 1px solid #E5E5E5;
     border-radius: 10px;
-    // min-height: 400px;
     padding-top: 50px;
     .profile-img {
       background: white;

@@ -21,13 +21,11 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  players: {
-    type: Array,
-    required: true,
-    default: () => [],
-  },
-});
+import { Players } from '../../models/Quinielas';
+
+const props = defineProps<{
+  players: Players,
+}>();
 </script>
 
 <style lang="scss">

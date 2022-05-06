@@ -31,7 +31,7 @@
           <tbody>
               <tr v-for="match in matches" :key="match.id">
                   <td class="text-start">
-                      <img width="35" height="35" :src="get_img(match.team_1.logo)" alt="team-visita"> <span>{{match.team_1.name}}</span>
+                      <img width="35" height="35" :src="get_img(match.team_1?.logo)" alt="team-visita" v-if="match.team_1?.logo"> <span>{{match.team_1?.name}}</span>
                       <p class="text-start">
                           <span class="badge rounded-pill bg-light" :class="{'bg-warning': (match.winner_id === match.team_id)}" @click="update(match.id, match.team_id)">
                               <i class="bi bi-trophy"></i> 
@@ -40,7 +40,7 @@
                       </p>
                   </td>
                   <td class="text-start">
-                      <img width="35" height="35" :src="get_img(match.team_2.logo)" alt="team-local"> <span>{{match.team_2.name}}</span>
+                      <img width="35" height="35" :src="get_img(match.team_2?.logo)" alt="team-local" v-if="match.team_2?.logo"> <span>{{match.team_2?.name}}</span>
                       <p class="text-start">
                           <span class="badge rounded-pill bg-light" :class="{'bg-warning': (match.winner_id === match.team_id_2)}" @click="update(match.id, match.team_id_2)">
                               <i class="bi bi-trophy"></i> 
@@ -71,11 +71,12 @@ import { ref } from 'vue';
 import { addMatch, updateMatch, deleteMatch } from '../../../api/adminRequests';
 import { teams } from '../../../utils/teams';
 import { toast } from '../../../utils/toast';
+import { Matches } from '../../../models/Quinielas';
 
 const props = defineProps<
   {
     id: Number, 
-    matches: Object
+    matches: Matches | undefined,
   }
 >();
 
@@ -109,7 +110,7 @@ async function deleteM(id: Number){
     await get();
 }
 
-async function update(id_match: Number, winner_id: Number){
+async function update(id_match: Number, winner_id: Number | null){
     await updateMatch(id_match, {
         winner_id: winner_id
     });

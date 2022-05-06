@@ -45,10 +45,8 @@
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '../stores/UserStore';
 import { logout as logoutCookies } from '../api/sessionRequests';
-// import { storeToRefs } from 'pinia';
 
 const userStore = useUserStore();
-// const { isAuthenticated } = storeToRefs(useUserStore());
 
 const router = useRouter()
 const route = useRoute()
