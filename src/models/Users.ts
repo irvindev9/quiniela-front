@@ -5,6 +5,7 @@ export type User = {
   name: string;
   email: string;
   img: string;
+  team?: Team;
   role_id: number;
   is_hide: number;
   is_paid: number;

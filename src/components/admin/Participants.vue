@@ -20,7 +20,7 @@
                         <tr v-for="user in users" :key="user.id">
                             <td>{{user.id}}</td>
                             <td class="text-center">
-                                <img width="20" height="20" :src="get_img(user.team.logo)" alt="team-visita">
+                                <img width="20" height="20" :src="get_img(user.team.logo)" alt="team-visita" v-if="user.team?.logo">
                             </td>
                             <td>
                                 <span>
