@@ -64,7 +64,7 @@
             </li>
             <li v-for="li in weeks" :key="li.id" class="page-item" :class="{'active' : (li.id == current_week)}">
               <a class="page-link" href="#" @click="changeWeek(li.id)">
-                {{ li.name.replace('Semana ', '') }}
+                {{ li.name?.replace('Semana ', '') }}
               </a>
             </li>
           </ul>
@@ -89,7 +89,11 @@ const matches: Ref<Matches> = ref([])
 
 const isActive = computed(() => {
   // get end_date of current week
-  const current_week_end_date = weeks.value.find((week: Week) => week.id === current_week.value).end_date
+  if(weeks.value.length > 0) {
+    const current_week_end_date = weeks.value.find((week: Week) => week.id === current_week.value).end_date
+  } else {
+    return false
+  }
 
   return new Date() > new Date(current_week_end_date)
 })
@@ -116,7 +120,9 @@ const displayResults = computed(() => {
 async function getW(){
   isLoading.value = true
   weeks.value = await getWeeks();
-  weeks.value = weeks.value.sort((a, b) => (a.name > b.name) ? 1 : -1);
+  if(weeks.value.length > 0) {
+    weeks.value = weeks.value.sort((a, b) => (a.name > b.name) ? 1 : -1);
+  }
   isLoading.value = false
 }
 
@@ -152,13 +158,17 @@ function get_results_of_match(results_of_player: any, match_id: number) {
 }
 
 function get_name_current_week() {
-  return weeks.value.find((week: any) => week.id == current_week.value)?.name;
+  if(weeks.value.length > 0) {
+    return weeks.value.find((week: any) => week.id == current_week.value)?.name;
+  }else{
+    return ''
+  }
 }
 
 onMounted(async () => {
     await getW();
     
-    current_week.value = weeks.value[weeks.value.length - 1].id;
+    current_week.value = weeks.value[weeks.value.length - 1]?.id;
 
     await getM();
 
