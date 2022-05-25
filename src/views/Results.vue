@@ -89,8 +89,9 @@ const matches: Ref<Matches> = ref([])
 
 const isActive = computed(() => {
   // get end_date of current week
+  let current_week_end_date = '2022-12-12 12:00:00';
   if(weeks.value.length > 0) {
-    const current_week_end_date = weeks.value.find((week: Week) => week.id === current_week.value).end_date
+    current_week_end_date = weeks.value.find((week: Week) => week.id === current_week.value).end_date
   } else {
     return false
   }

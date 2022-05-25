@@ -5,12 +5,12 @@
     </div>
     <div class="form-group">
         <label for="whats">Número de WhatsApp</label>
-        <input v-model="whatsNumber" :class="{'is-invalid': (v$.whatsNumber.$invalid && whatsNumber.length > 0)}" class="form-control" id="whats" placeholder="Número de WhatsApp"/>
+        <input v-model="whatsNumber" :class="{'is-invalid': (v$.whatsNumber.$invalid && whatsNumber.length > 0 && v$.whatsNumber.$error)}" class="form-control" id="whats" placeholder="Número de WhatsApp" @blur="v$.whatsNumber.$touch"/>
         <small class="invalid-feedback">Ingresa un valor valido</small>
     </div>
     <div class="form-group">
         <label for="password">Contraseña</label>
-        <input type="password" v-model="password" :class="{'is-invalid': (v$.password.$invalid && password.length > 0)}" class="form-control" id="password" placeholder="Contraseña" />
+        <input type="password" v-model="password" :class="{'is-invalid': (v$.password.$invalid && password.length > 0 && v$.password.$error)}" class="form-control" id="password" placeholder="Contraseña"  @blur="v$.password.$touch"/>
         <small class="invalid-feedback">Ingresa un valor valido</small>
     </div>
     <div class="form-group mt-3 text-end">
@@ -35,8 +35,8 @@ import { loginUser } from '../../api/sessionRequests';
 import useVuelidate from '@vuelidate/core'
 import { required, numeric, minLength } from '@vuelidate/validators'
 
-const whatsNumber = ref('6565340038');
-const password = ref('abc123');
+const whatsNumber = ref('');
+const password = ref('');
 const isLoading = ref(false);
 
 const rules = {
@@ -60,6 +60,8 @@ const v$ = useVuelidate(rules, {
 
 async function login() {
   isLoading.value = true;
+
+  console.log(v$.value.$touch());
 
   await loginUser(whatsNumber.value, password.value);
 
