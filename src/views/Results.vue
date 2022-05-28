@@ -1,5 +1,5 @@
 <template>
-  <div class="container results-container">
+  <div class="container-fluid results-container px-5">
     <div class="row bg-white rounded my-2">
       <div class="col-12 col-md-6 col-lg-10">
         <h5 class="py-2">Resultados {{get_name_current_week()}}</h5>
@@ -122,7 +122,7 @@ async function getW(){
   isLoading.value = true
   weeks.value = await getWeeks();
   if(weeks.value.length > 0) {
-    weeks.value = weeks.value.sort((a, b) => (a.name > b.name) ? 1 : -1);
+    weeks.value = weeks.value.sort((a, b) => (Number(a.name.split(' ')[1]) > Number(b.name.split(' ')[1])) ? 1 : -1);
   }
   isLoading.value = false
 }

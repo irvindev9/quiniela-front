@@ -35,6 +35,21 @@
                                 <div class="col-12 text-end">
                                     <small class="text-muted mx-5">Cierra el: {{week.end_date}}</small>
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-sm btn-outline-warning" 
+                                            :disabled="isLoading"
+                                            @click="getGames(Number(week.name.split(' ')[1]), Number(adminStore.currentSeason.split(' ')[1]))" v-if="validate(index)"
+                                        >
+                                            <div v-if="!isLoading">
+                                               <i class="bi bi-binoculars"></i>
+                                                Obtener partidos {{week.name.split(' ')[1]}}/{{adminStore.currentSeason.split(' ')[1]}} 
+                                            </div>
+                                            <div v-else>
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                <span class="sr-only">Cargando...</span>
+                                            </div>
+                                        </button>
                                         <button type="button" class="btn btn-sm btn-outline-danger" @click="deleteW(week.id)">
                                             <i class="bi bi-trash"></i> 
                                             Eliminar
@@ -57,18 +72,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, Ref, ref } from 'vue';
-import { saveWeek, getWeeks, deleteWeek, updateWeek } from '../../api/adminRequests';
+import { onBeforeMount, onMounted, Ref, ref } from 'vue';
+import { saveWeek, getWeeks, deleteWeek, updateWeek, callScraper } from '../../api/adminRequests';
+import { useAdminStore } from '../../stores/AdminStore';
 import Matches from './addmatch/Matches.vue';
 import { Weeks } from '../../models/Quinielas';
 
 const weeks: Ref<Weeks>= ref({});
+const adminStore = useAdminStore();
 
 const dateTime = ref('')
 const nameWeek = ref('')
 const matchesComponent = ref()
+const isLoading = ref(false)
 
-onMounted(async () => {
+onBeforeMount(async () => {
     await get();
 })
 
@@ -85,8 +103,9 @@ async function get() {
     weeks.value = await getWeeks();
 
     weeks.value.sort((a, b) => {
-        if (a.name > b.name) return -1;
-        if (a.name < b.name) return 1;
+        console.log(a.name.split(' ')[1])
+        if (Number(a.name.split(' ')[1]) > Number(b.name.split(' ')[1])) return -1;
+        if (Number(a.name.split(' ')[1]) < Number(b.name.split(' ')[1])) return 1;
         return 0;
     });
 }
@@ -105,6 +124,26 @@ async function update(id: number) {
 
 function makeSlug(name: string, id: number = 0) {
     return name.toLowerCase().replace(/ /g, '') + id;
+}
+
+async function getGames(week: number, year: number) {
+    isLoading.value = true;
+    await callScraper(week, year);
+
+    await get();
+    isLoading.value = false;
+}
+
+function validate(index: number) {
+    if (weeks.value[index].matches) {
+        if (weeks.value[index].matches.length == 0) {
+            return true;
+        }else{
+            return false;
+        }
+    }else{
+        return true;
+    }
 }
 
 </script>

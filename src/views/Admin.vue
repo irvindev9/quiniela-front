@@ -34,7 +34,9 @@ import Participants from "../components/admin/Participants.vue";
 import Backgrounds from "../components/admin/Backgrounds.vue";
 import Settings from "../components/admin/Settings.vue";
 import { useUserStore } from "../stores/UserStore";
+import { useAdminStore } from "../stores/AdminStore"
 import { mapStores } from "pinia";
+import { getSeasons } from "../api/adminRequests";
 
 
 const active: string = 'active bg-light border border-light';
@@ -46,6 +48,7 @@ export default defineComponent({
     },
     computed: {
         ...mapStores(useUserStore),
+        ...mapStores(useAdminStore),
         section(){
             switch(this.$route.query.section){
                 case "add-match":
@@ -77,11 +80,15 @@ export default defineComponent({
             });
         }
     },
-    mounted(){
+    async mounted(){
         if(this.userStore.role_id !== 1){
             this.$router.push({
                 name: 'Marcador'
             });
+        }else{
+            const adminStore = useAdminStore();
+            const seasons = await getSeasons();
+            adminStore.updateSeason(seasons.filter(value => (value.is_active == 1))[0].name)
         }
     }
     

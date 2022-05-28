@@ -320,3 +320,15 @@ export const deleteNotification = async(id: number) => {
     });
 }
 
+export const callScraper = async(week: number, year: number) => {
+    await axios.get(import.meta.env.VITE_API_URL + 'get_espn_games/' + week + '/' + year, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+        },
+    }).then((response) => {
+        toast('ok!', {});
+    }).catch((error) => {
+        toast(error.response.data.message, { type: 'error' });
+    });
+}
+
