@@ -101,7 +101,7 @@ async function add(){
 }
 
 async function get(){
-    await emit('refresh');
+    await emit('refresh', true);
 }
 
 async function deleteM(id: Number){

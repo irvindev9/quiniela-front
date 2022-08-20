@@ -75,11 +75,13 @@
 import { onBeforeMount, onMounted, Ref, ref } from 'vue';
 import { saveWeek, getWeeks, deleteWeek, updateWeek, callScraper } from '../../api/adminRequests';
 import { useAdminStore } from '../../stores/AdminStore';
+import { useMatchStore } from '../../stores/admin/MatchStore';
 import Matches from './addmatch/Matches.vue';
 import { Weeks } from '../../models/Quinielas';
 
 const weeks: Ref<Weeks>= ref({});
 const adminStore = useAdminStore();
+const matchStore = useMatchStore();
 
 const dateTime = ref('')
 const nameWeek = ref('')
@@ -99,15 +101,28 @@ async function save() {
     get();
 }
 
-async function get() {
-    weeks.value = await getWeeks();
+async function get(forceUpdate: Boolean = false) {
+    isLoading.value = true;
+    
+    if (forceUpdate) {
+        matchStore.clear();
+    }
+
+    if(checkForUpdate()) {
+        console.log('update');
+        weeks.value = await getWeeks();
+        matchStore.setWeeks(weeks.value);
+    } else {
+        console.log('no update');
+        weeks.value = matchStore.weeks;
+    }
 
     weeks.value.sort((a, b) => {
-        console.log(a.name.split(' ')[1])
         if (Number(a.name.split(' ')[1]) > Number(b.name.split(' ')[1])) return -1;
         if (Number(a.name.split(' ')[1]) < Number(b.name.split(' ')[1])) return 1;
         return 0;
     });
+    isLoading.value = false;
 }
 
 async function deleteW(id: number) {
@@ -135,17 +150,26 @@ async function getGames(week: number, year: number) {
 }
 
 function validate(index: number) {
-    if (weeks.value[index].matches) {
+    if(weeks.value[index].matches) {
         if (weeks.value[index].matches.length == 0) {
             return true;
-        }else{
+        } else {
             return false;
         }
-    }else{
+    } else {
         return true;
     }
 }
 
+function checkForUpdate() {
+    const tenMinutesAgo = 1 * 60 * 1000;
+    const timeToUpdate = matchStore.lastTimeUpdated ? matchStore.lastTimeUpdated : 0;
+    if (timeToUpdate < (new Date().getTime() - tenMinutesAgo)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 </script>
 
 <style lang="scss">

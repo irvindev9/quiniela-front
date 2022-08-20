@@ -76,8 +76,8 @@
             </div>
         </div>
         <ModalPassword :modalName="modalName" title="Cambiar password" :userId="activeUserId"/>
-        <ModalName :modalName="modalNameN" :userId="activeUserId" @getUsers="loadUsers"/>
-        <ModalImage :modalName="modalImage" :userId="activeUserId" @getUsers="loadUsers"/>
+        <ModalName :modalName="modalNameN" :userId="activeUserId" @getUsers="loadUsers(true)"/>
+        <ModalImage :modalName="modalImage" :userId="activeUserId" @getUsers="loadUsers(true)"/>
     </div>
 </template>
 
@@ -89,6 +89,7 @@ import ModalName from '../modals/ModalName.vue';
 import ModalImage from '../modals/ModalImage.vue';
 import { getUsers, deleteUser, updateUserStatus, loginAsUser } from '../../api/adminRequests';
 import { Users } from '../../models/Users';
+import { useParticipantStore } from '../../stores/admin/Participants';
 
 const newPassword = ref('');
 const modalName = ref('participantsModal');
@@ -96,6 +97,7 @@ const modalNameN = ref('participantsModalName');
 const modalImage = ref('participantsModalImage');
 const users: Ref<Users> = ref([]);
 const activeUserId = ref(0);
+const participantsStore = useParticipantStore();
 
 const router = useRouter();
 
@@ -103,18 +105,31 @@ onMounted(async () => {
     await loadUsers();
 });
 
-async function loadUsers() {
-    users.value = await getUsers();
+async function loadUsers(forceUpdate: Boolean = false) {
+
+    if (forceUpdate) {
+        participantsStore.clear();
+    }
+
+    if (checkForUpdate()) {
+        console.log('update');
+        users.value = await getUsers();
+        participantsStore.setParticipants(users.value);
+    } else {
+        console.log('no update');
+        users.value = participantsStore.participants;
+    }
+    
 }
 
 async function deleteUsr(userId: number) {
     await deleteUser(userId);
-    await loadUsers();
+    await loadUsers(true);
 }
 
 async function updateUser(userId: number, ...params: any) {
     await updateUserStatus(userId, ...params);
-    await loadUsers();
+    await loadUsers(true);
 }
 
 async function login(userId: number) {
@@ -123,6 +138,16 @@ async function login(userId: number) {
 
 function get_img(logo: string) {
     return new URL(`../../assets/teams/${logo}`, import.meta.url).href;
+}
+
+function checkForUpdate(){
+    const tenMinutesAgo = 1 * 60 * 1000;
+    const timeToUpdate = participantsStore.lastTimeUpdated ? participantsStore.lastTimeUpdated : 0;
+    if (timeToUpdate < (new Date().getTime() - tenMinutesAgo)) {
+        return true;
+    }else{
+        return false;
+    }
 }
 </script>
 

@@ -70,13 +70,23 @@ import { Ref, ref, onMounted } from 'vue';
 import { toast } from '../../utils/toast';
 import { uploadBackgroundFile, getAllBackgrounds, deleteBackground } from '../../api/adminRequests';
 import { Backgrounds } from '../../models/Backgrounds';
+import { useBackgroundStore } from '../../stores/admin/BackgroundStore';
 
 const isLoading = ref(false)
 const file = ref(null)
 const backgrounds: Ref<Backgrounds> = ref([])
+const backgroundStore = useBackgroundStore()
 
 onMounted(async () => {
-    backgrounds.value = await getAllBackgrounds()
+    if(checkForUpdate()) {
+        console.log('update')
+        backgrounds.value = await getAllBackgrounds()
+        backgroundStore.setBackgrounds(backgrounds.value)
+    } else {
+        console.log('no update')
+        backgrounds.value = backgroundStore.backgrounds
+    }
+    
 })
 
 function updateFile(e: any){
@@ -100,6 +110,16 @@ async function upload(){
 async function deleteBg(name: string){
     await deleteBackground(name)
     backgrounds.value = await getAllBackgrounds()
+}
+
+function checkForUpdate(){
+    const tenMinutesAgo = 1 * 60 * 1000;
+    const timeToUpdate = backgroundStore.lastTimeUpdated ? backgroundStore.lastTimeUpdated : 0;
+    if (timeToUpdate < (new Date().getTime() - tenMinutesAgo)) {
+        return true;
+    }else{
+        return false;
+    }
 }
 </script>
 

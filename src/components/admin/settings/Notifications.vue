@@ -109,15 +109,23 @@ import iziToast from 'izitoast';
 import { IziToastPosition } from 'izitoast';
 import { saveNotification, getNotifications, deleteNotification } from '../../../api/adminRequests';
 import { Notifications } from '../../../models/Notifications';
+import { useSettingStore } from '../../../stores/admin/SettingStore';
 
 const color = ref('rgba(157,222,255,.9)');
 const position: Ref<IziToastPosition> = ref('topRight');
 const message = ref('');
 const activeUntil = ref('');
 const notifications: Ref<Notifications> = ref([]);
+const settingStore = useSettingStore();
 
 onMounted(async () => {
-    notifications.value = await getNotifications();
+    if(checkForUpdate()) {
+        notifications.value = await getNotifications();
+        settingStore.setNotifications(notifications.value);
+    } else {
+        notifications.value = settingStore.notifications;
+    }
+    
 });
 
 function previewNotification(message: string, color: string, position: IziToastPosition) {
@@ -139,6 +147,16 @@ async function save() {
 async function deleteN(id: number) {
     await deleteNotification(id);
     notifications.value = await getNotifications();
+}
+
+function checkForUpdate(){
+    const tenMinutesAgo = 1 * 60 * 1000;
+    const timeToUpdate = settingStore.notificationLastTimeUpdated ? settingStore.notificationLastTimeUpdated : 0;
+    if (timeToUpdate < (new Date().getTime() - tenMinutesAgo)) {
+        return true;
+    }else{
+        return false;
+    }
 }
 </script>
 

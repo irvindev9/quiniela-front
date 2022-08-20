@@ -114,7 +114,7 @@ async function getW(){
     weeks.value = await getWeeks();
     // sort by name
     if(weeks.value.length > 0){
-        weeks.value.sort((a, b) => (a.name < b.name) ? 1 : -1);
+        weeks.value.sort((a, b) => (Number(a.name.split(' ')[1]) < Number(b.name.split(' ')[1])) ? 1 : -1);
         current_week.value = weeks.value[week.value.length - 1]?.id;
     } else {
         current_week.value = 0;
