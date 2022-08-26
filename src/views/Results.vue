@@ -43,8 +43,8 @@
                 <i class="bi bi-question text-dark" title="No se encontró ningún valor" v-else></i>
               </span>
               <span v-else>
-                <i class="bi bi-check2" v-if="get_img_of_selection(user.results, match.id) !== ''" title="Quiniela lista"></i>
-                <i class="bi-question text-dark" title="No se encontró ningún valor" v-else></i>
+                <i class="bi-question text-dark" v-if="get_img_of_selection(user.results, match.id) !== ''" title="No se encontró ningún valor"></i>
+                <i class="bi bi-check2" title="Quiniela lista" v-else></i>
               </span>
             </td>
             <td class="text-center">
