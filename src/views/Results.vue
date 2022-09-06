@@ -31,7 +31,8 @@
             <td nowrap class="d-flex player">
               <div class="player-img">
                 <img :src="user.img" alt="img" v-if="user.img">
-                <img src="../assets/default_user.png" alt="img" v-else>
+                <!-- <img src="../assets/default_user.png" alt="img" v-else> -->
+                <img :src="get_img_avatar(user.team_id)" alt="img" v-else>
               </div>
               <small>
                 {{user.name}}
@@ -165,6 +166,11 @@ function get_name_current_week() {
   }else{
     return ''
   }
+}
+
+function get_img_avatar(logo: string) {
+  const logo_padded = logo.toString().padStart(2, "0");
+  return new URL(`../assets/teams/team_${logo_padded}.png`, import.meta.url).href;
 }
 
 onMounted(async () => {
