@@ -6,7 +6,7 @@
       </div>
       <div class="player-img">
         <img :src="player.img" alt="img" v-if="player.img">
-        <img src="../../assets/default_user.png" alt="img" v-else>
+        <img :src="get_img(player.team_id)" alt="img" v-else>
       </div>
       <div class="player-info px-3">
         <p class="mb-0">
@@ -26,6 +26,11 @@ import { Players } from '../../models/Quinielas';
 const props = defineProps<{
   players: Players,
 }>();
+
+function get_img(logo: string) {
+  const logo_padded = logo.toString().padStart(2, "0");
+  return new URL(`../../assets/teams/team_${logo_padded}.png`, import.meta.url).href;
+}
 </script>
 
 <style lang="scss">

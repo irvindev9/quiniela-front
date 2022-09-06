@@ -3,7 +3,7 @@
     <div class="col second-place" v-if="props.players[1]">
       <div class="circle shadow-sm">
         <img :src="props.players[1].img" alt="img" v-if="props.players[1].img">
-        <img src="../../assets/default_user.png" alt="img" v-else>
+        <img :src="get_img(props.players[1].team_id)" alt="img" v-else>
         <div class="place-holder">
           <span>{{props.players[1].position}}</span>
         </div>
@@ -17,7 +17,7 @@
     <div class="col" v-if="props.players[0]">
       <div class="circle shadow-sm">
         <img :src="props.players[0].img" alt="img" v-if="props.players[0].img">
-        <img src="../../assets/default_user.png" alt="img" v-else>
+        <img :src="get_img(props.players[0].team_id)" alt="img" v-else>
         <div class="place-holder">
           <span>{{props.players[0].position}}</span>
         </div>
@@ -31,7 +31,7 @@
     <div class="col second-place" v-if="props.players[2]">
       <div class="circle shadow-sm">
         <img :src="props.players[2].img" alt="img" v-if="props.players[2].img">
-        <img src="../../assets/default_user.png" alt="img" v-else>
+        <img :src="get_img(props.players[2].team_id)" alt="img" v-else>
         <div class="place-holder">
           <span>{{props.players[2].position}}</span>
         </div>
@@ -53,6 +53,11 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+function get_img(logo: string) {
+  const logo_padded = logo.toString().padStart(2, "0");
+  return new URL(`../../assets/teams/team_${logo_padded}.png`, import.meta.url).href;
+}
 </script>
 
 <style lang="scss">
