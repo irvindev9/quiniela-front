@@ -41,11 +41,11 @@
             <td class="user-results" v-for="match in matches" :key="match.id">
               <span class="badge" :class="{'bg-success' : (match.winner_id == get_results_of_match(user.results, match.id))}" v-if="isActive">
                 <img :src="get_img_of_selection(user.results, match.id)" alt="team" v-if="get_img_of_selection(user.results, match.id) !== ''">
-                <i class="bi bi-question text-dark" title="No se encontró ningún valor" v-else></i>
+                <i class="bi bi-x text-dark" title="No se encontró ningún valor" v-else></i>
               </span>
               <span v-else>
-                <i class="bi-check2 text-dark" v-if="get_img_of_selection(user.results, match.id) !== ''" title="No se encontró ningún valor"></i>
-                <i class="bi bi-question" title="Quiniela lista" v-else></i>
+                <i class="bi-question text-dark" v-if="get_img_of_selection(user.results, match.id) !== ''" title="Quiniela lista"></i>
+                <i class="bi bi-alarm" title="No se encontró ningún valor" v-else></i>
               </span>
             </td>
             <td class="text-center">
