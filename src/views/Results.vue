@@ -98,6 +98,10 @@ const isActive = computed(() => {
     return false
   }
 
+  if (weeks.value.find((week: Week) => week.id === current_week.value).is_forced_open) {
+    return true
+  }
+
   return new Date() > new Date(current_week_end_date)
 })
 

@@ -134,7 +134,7 @@ async function deleteW(id: number) {
 async function update(id: number) {
     await updateWeek(id);
 
-    await get();
+    await get(true);
 }
 
 function makeSlug(name: string, id: number = 0) {
