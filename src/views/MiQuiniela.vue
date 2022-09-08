@@ -12,7 +12,7 @@
                 <div id="mi-quiniela" class="card">
                     <div class="card-header bg-light d-flex justify-content-between">
                         <h5 class="m-0">Tu quiniela: {{userStore.name}}</h5>
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" v-if="!isLocked">
+                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" v-if="isLocked">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Guardando...
@@ -24,7 +24,7 @@
                     </div>
                     <div class="card-body">
                         <SelectTeam v-for="match in week[0].matches" :key="match.id" :match="match" @update="saveData"/> 
-                        <div class="lock-match align-middle" v-if="isLocked">
+                        <div class="lock-match align-middle" v-if="!isLocked">
                             <span>
                                 <i class="bi-lock"></i>
                                 <br>
