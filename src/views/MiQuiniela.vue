@@ -98,7 +98,7 @@ function checkIfIsLocked(){
 
     const today = new Date();
 
-    if(dateTime_to_close >= today){
+    if(dateTime_to_close <= today){
         isLocked.value = false;
     }else{
         if(force_open){

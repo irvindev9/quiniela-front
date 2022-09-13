@@ -98,7 +98,7 @@ async function save() {
         date: dateTime.value
     });
 
-    get();
+    get(true);
 }
 
 async function get(forceUpdate: Boolean = false) {
@@ -128,7 +128,7 @@ async function get(forceUpdate: Boolean = false) {
 async function deleteW(id: number) {
     await deleteWeek(id);
 
-    await get();
+    await get(true);
 }
 
 async function update(id: number) {
@@ -145,7 +145,7 @@ async function getGames(week: number, year: number) {
     isLoading.value = true;
     await callScraper(week, year);
 
-    await get();
+    await get(true);
     isLoading.value = false;
 }
 
