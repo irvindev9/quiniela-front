@@ -332,3 +332,15 @@ export const callScraper = async(week: number, year: number) => {
     });
 }
 
+export const clearCache = async() => {
+    await axios.get(import.meta.env.VITE_API_URL + 'clear_cache', {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+        },
+    }).then((response) => {
+        toast('Se limpió la cache del servidor!', {});
+    }).catch((error) => {
+        toast(error.response.data.message, { type: 'error' });
+    });
+}
+

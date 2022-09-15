@@ -37,13 +37,30 @@
             <hr />
             <Notifications />
         </div>
+        <div class="container">
+            <div class="row my-3">
+                <hr>
+                <div class="col-12">
+                    <button class="btn btn-outline-secondary bg-light" @click="clearCacheCaller">
+                        <div v-if="cacheLoading">
+                            <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </div>
+                        <div v-else>
+                            <i class="bi bi-trash"></i> 
+                            Eliminar cache
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, Ref, ref } from 'vue';
 import iziToast from 'izitoast';
-import { getSeasons, updateSeason, updateSeasonRegister } from '../../api/adminRequests';
+import { getSeasons, updateSeason, updateSeasonRegister, clearCache } from '../../api/adminRequests';
 import Notifications from './settings/Notifications.vue';
 import { Seasons } from '../../models/Quinielas';
 import { useSettingStore } from '../../stores/admin/SettingStore';
@@ -55,6 +72,7 @@ const seasons: Ref<Seasons> = ref([]);
 const season: Ref<string> = ref('');
 const season_register_open = ref(false);
 const settingStore = useSettingStore();
+const cacheLoading = ref(false);
 
 onMounted(async () => {
     await loadSeasons();
@@ -126,5 +144,13 @@ function checkForUpdate() {
     }else{
         return false;
     }
+}
+
+async function clearCacheCaller() {
+    cacheLoading.value = true;
+
+    await clearCache();
+
+    cacheLoading.value = false;
 }
 </script>
