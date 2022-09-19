@@ -6,7 +6,7 @@
       </div>
       <div class="col-12 col-md-6 col-lg-2 py-2">
         <small for="orderBy">Ordenar por</small>
-        <select class="form-select form-select-sm" v-model="orderBy">
+        <select class="form-select form-select-sm" v-model="orderBy" @change="saveSettings">
           <option value="1">Registro</option>
           <option value="2">Nombre</option>
           <option value="3">Puntuación</option>
@@ -77,10 +77,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, Ref, ref, computed } from 'vue';
+import { onMounted, Ref, ref, computed, onBeforeMount } from 'vue';
 import { getWeeks } from '../api/quinielaRequests';
 import { getResults, getMatchs } from '../api/resultsRequests';
 import { Weeks, Matches, UserResults, Week } from '../models/Quinielas';
+import Cookies from 'js-cookie';
 
 const isLoading = ref(false)
 const weeks: Ref<Weeks> = ref([])
@@ -186,6 +187,16 @@ onMounted(async () => {
 
     results.value = await getResults(current_week.value);
 });
+
+function saveSettings() {
+  Cookies.set('orderBy', orderBy.value.toString(), { expires: 30 , path: '', domain: import.meta.env.VITE_COOKIE_DOMAIN });
+}
+
+onBeforeMount(() => {
+  if(Cookies.get('orderBy')) {
+    orderBy.value = Number(Cookies.get('orderBy'));
+  }
+})
 </script>
 
 <style lang="scss">
