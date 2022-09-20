@@ -3,7 +3,14 @@
     <div class="row justify-content-center">
       <div class="col-12 col-md-10 col-lg-8 text-center bg-white rounded p-2">
         <h5 class="py-3">Tabla de resultados</h5>
-        <div class="row mx-0 justify-content-center">
+        <div class="row mx-0" v-if="isLoading">
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-secondary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+        <div class="row mx-0 justify-content-center" v-else>
           <div class="col-12 col-md-10">
             <FirstPlaces :players="first_places" />
           </div>
@@ -27,6 +34,7 @@ const players = ref([])
 const first_places = ref([])
 const second_places = ref([])
 const leaderBoardStore = useLeaderBoardStore()
+const isLoading = ref(true)
 
 onMounted(async () => {
   if(checkForUpdate()) {
@@ -35,6 +43,8 @@ onMounted(async () => {
   } else {
     players.value = leaderBoardStore.leaderBoard;
   }
+
+  isLoading.value = false
   
 
   if(players.value.length >= 3) {

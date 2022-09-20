@@ -13,7 +13,7 @@
         </select>
       </div>
     </div>
-    <div class="row table-responsive bg-white rounded shadow-sm">
+    <div class="row table-responsive bg-white rounded shadow-sm" v-if="!isLoading">
       <table class="col-12 table table-borderless mb-0">
         <thead>
           <tr>
@@ -56,6 +56,13 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="row bg-white py-3" v-else>
+      <div class="d-flex justify-content-center">
+        <div class="spinner-border text-secondary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
     </div>
     <div class="row bg-white rounded my-2 footer">
       <div class="col-12 col-md-6 col-lg-10 py-2">
