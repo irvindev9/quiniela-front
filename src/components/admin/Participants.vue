@@ -36,7 +36,7 @@
                                 <span>
                                     <i class="bi bi-phone"></i>
                                     {{user.email}}
-                                    <span class="badge rounded-pill bg-primary edit" @click="loginAsUser(user.id)">
+                                    <span :class="{'bg-primary': user.role_id === 2, 'd-none bg-secondary not_allowed': user.role_id !== 2}" class="badge rounded-pill edit" @click="loginAsUser(user.id)">
                                         <i class="bi bi-door-open"></i>
                                         Login
                                     </span>
@@ -65,7 +65,7 @@
                                 </span>
                             </td>
                             <td>
-                                <span class="badge rounded-pill bg-warning" data-bs-toggle="modal" :data-bs-target="'#' + modalName" @click="activeUserId = user.id">
+                                <span :class="{'bg-warning': user.role_id === 2, 'd-none bg-secondary not_allowed': user.role_id !== 2}" class="badge rounded-pill" data-bs-toggle="modal" :data-bs-target="'#' + modalName" @click="activeUserId = user.id">
                                     <i class="bi bi-question-diamond"></i>
                                     Cambiar password
                                 </span>
@@ -173,6 +173,10 @@ function checkForUpdate(){
 
     .bi-person-circle {
         cursor: pointer;
+    }
+
+    .not_allowed {
+        cursor: not-allowed !important;
     }
 }
 </style>
