@@ -50,7 +50,7 @@
                                                 <span class="sr-only">Cargando...</span>
                                             </div>
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" @click="deleteW(week.id)">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" :data-bs-target="'#' + modalConfirmationId" @click="activeWeekId = week.id" v-if="validateIfWeekIsOpen(week.id)">
                                             <i class="bi bi-trash"></i> 
                                             Eliminar
                                         </button>
@@ -67,7 +67,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <Matches :id="week.id" :matches="week.matches" @refresh="get" />
+                            <Matches :id="week.id" :matches="week.matches" @refresh="get" :isOpen="validateIfWeekIsOpen(week.id)" />
+                            <ModalConfirmation  :modalName="modalConfirmationId" :targetId="activeWeekId" :message="modalConfirmationMessage" @deleteTarget="confirmDeleteWeek" />
                         </div>
                     </div>
                 </div>
@@ -78,10 +79,11 @@
 
 <script setup lang="ts">
 import { onBeforeMount, onMounted, Ref, ref } from 'vue';
-import { saveWeek, getWeeks, deleteWeek, updateWeek, callScraper } from '../../api/adminRequests';
+import { saveWeek, getWeeks, deleteWeek, updateWeek, callScraper, checkPassword } from '../../api/adminRequests';
 import { useAdminStore } from '../../stores/AdminStore';
 import { useMatchStore } from '../../stores/admin/MatchStore';
 import Matches from './addmatch/Matches.vue';
+import ModalConfirmation from '../modals/ModalConfirmation.vue';
 import { Weeks } from '../../models/Quinielas';
 
 const weeks: Ref<Weeks>= ref({});
@@ -92,6 +94,9 @@ const dateTime = ref('')
 const nameWeek = ref('')
 const matchesComponent = ref()
 const isLoading = ref(false)
+const modalConfirmationId = ref('modalConfirmationWeek')
+const modalConfirmationMessage = ref('Esta acción no se puede deshacer, se eliminara la semana y todas las quinielas asociadas a esta. ¿Desea continuar?')
+const activeWeekId = ref(0)
 
 onBeforeMount(async () => {
     await get();
@@ -130,10 +135,20 @@ async function get(forceUpdate: Boolean = false) {
     isLoading.value = false;
 }
 
-async function deleteW(id: number) {
-    await deleteWeek(id);
+async function confirmDeleteWeek(password: string, id: number) {
 
-    await get(true);
+    const authenticaded = await checkPassword(password);
+
+    if (authenticaded == 200) {
+        await deleteWeek(id);
+        await get(true);
+    }
+}
+
+function validateIfWeekIsOpen(week_id: number) {
+    const end_date = weeks.value.find(week => week.id == week_id).end_date;
+
+    return new Date(end_date) >= new Date();
 }
 
 async function update(id: number, is_forced_open: number, is_forced_open_quiniela: number) {

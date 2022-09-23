@@ -38,10 +38,9 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { uploadUserPhoto } from '../../api/adminRequests';
 
 const props = defineProps({
-  userId: {
+  targetId: {
     type: Number,
     default: 0
   }, 
@@ -55,16 +54,16 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['deleteUser'])
+const emit = defineEmits(['deleteTarget'])
 
 const password = ref('');
 
 function confirm(){
-  if (props.userId === 0) {
+  if (props.targetId === 0) {
     return;
   }
 
-  emit('deleteUser', password.value, props.userId);
+  emit('deleteTarget', password.value, props.targetId);
 
   password.value = '';
   

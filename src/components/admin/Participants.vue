@@ -78,7 +78,7 @@
         <ModalPassword :modalName="modalName" title="Cambiar password" :userId="activeUserId"/>
         <ModalName :modalName="modalNameN" :userId="activeUserId" @getUsers="loadUsers(true)"/>
         <ModalImage :modalName="modalImage" :userId="activeUserId" @getUsers="loadUsers(true)"/>
-        <ModalConfirmation :modalName="modalConfirmationId" :userId="activeUserId" :message="modalConfirmationMessage" @deleteUser="confirmDeleteUser"/>
+        <ModalConfirmation :modalName="modalConfirmationId" :targetId="activeUserId" :message="modalConfirmationMessage" @deleteTarget="confirmDeleteUser"/>
     </div>
 </template>
 
@@ -157,8 +157,6 @@ function checkForUpdate(){
 
 async function confirmDeleteUser(password: string, userId: number) {
     const authenticaded = await checkPassword(password);
-
-    console.log(authenticaded);
 
     if (authenticaded === 200) {
         await deleteUsr(userId);

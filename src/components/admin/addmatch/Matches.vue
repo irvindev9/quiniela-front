@@ -49,7 +49,7 @@
                       </p>
                   </td>
                   <td>
-                      <span class="badge rounded-pill bg-danger" @click="deleteM(match.id)">
+                      <span class="badge rounded-pill bg-danger" data-bs-toggle="modal" :data-bs-target="'#' + modalConfirmationId" @click="activeMatchId = match.id" v-if="isOpen">
                           <i class="bi bi-trash"></i> 
                           Eliminar
                       </span>
@@ -63,20 +63,23 @@
           </tbody>
       </table>
     </div>
+    <ModalConfirmation :modalName="modalConfirmationId" :targetId="activeMatchId" :message="modalConfirmationMessage" @deleteTarget="confirmDeleteMatch"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { addMatch, updateMatch, deleteMatch } from '../../../api/adminRequests';
+import { addMatch, updateMatch, deleteMatch, checkPassword } from '../../../api/adminRequests';
 import { teams } from '../../../utils/teams';
 import { toast } from '../../../utils/toast';
 import { Matches } from '../../../models/Quinielas';
+import ModalConfirmation from '../../modals/ModalConfirmation.vue';
 
 const props = defineProps<
   {
     id: Number, 
     matches: Matches | undefined,
+    isOpen: Boolean
   }
 >();
 
@@ -85,6 +88,9 @@ const emit = defineEmits(['refresh']);
 const team_id = ref(1);
 const team_id_2 = ref(1);
 const teams_options = ref(teams());
+const activeMatchId = ref(0);
+const modalConfirmationId = ref('modalConfirmationMatch');
+const modalConfirmationMessage = ref('Esta acción no se puede deshacer. Se eliminara el partido y todos los pronósticos asociados. ¿Desea continuar?');
 
 async function add(){
     if (team_id.value == team_id_2.value) {
@@ -104,10 +110,15 @@ async function get(){
     await emit('refresh', true);
 }
 
-async function deleteM(id: Number){
-    const res = await deleteMatch(id);
+async function confirmDeleteMatch(password: string, id: Number){
 
-    await get();
+    const authenticaded = await checkPassword(password);
+
+    if (authenticaded == 200) {
+        await deleteMatch(id);
+        await get();
+    }
+    
 }
 
 async function update(id_match: Number, winner_id: Number | null){
