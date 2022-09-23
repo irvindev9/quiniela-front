@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="modal shadow fade" :id="props.modalName" tabindex="-1">
+    <div class="modal shadow fade confirmationModal" :id="props.modalName" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -11,9 +11,7 @@
           </div>
           <div class="modal-body text-start">
             <div class="mb-3">
-              <p>
-                {{ props.message }}
-              </p>
+              <p v-html="props.message"></p>
             </div>
             <div class="mb-3">
               <div>
@@ -72,3 +70,12 @@ function confirm(){
   
 }
 </script>
+
+<style lang="scss">
+  .confirmationModal {
+    small {
+      color: #7f7f7f;
+      font-size: 10px;
+    }
+  }
+</style>
