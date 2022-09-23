@@ -43,7 +43,7 @@
                                 </span>
                             </td>
                             <td>
-                                <span class="badge rounded-pill bg-danger" @click="deleteUsr(user.id)">
+                                <span class="badge rounded-pill bg-danger" data-bs-toggle="modal" :data-bs-target="'#' + modalConfirmationId" @click="activeUserId = user.id">
                                     <i class="bi bi-trash"></i> 
                                     Eliminar
                                 </span>
@@ -78,6 +78,7 @@
         <ModalPassword :modalName="modalName" title="Cambiar password" :userId="activeUserId"/>
         <ModalName :modalName="modalNameN" :userId="activeUserId" @getUsers="loadUsers(true)"/>
         <ModalImage :modalName="modalImage" :userId="activeUserId" @getUsers="loadUsers(true)"/>
+        <ModalConfirmation :modalName="modalConfirmationId" :userId="activeUserId" :message="modalConfirmationMessage" @deleteUser="confirmDeleteUser"/>
     </div>
 </template>
 
@@ -87,14 +88,18 @@ import { useRouter } from 'vue-router';
 import ModalPassword from '../modals/ModalPassword.vue';
 import ModalName from '../modals/ModalName.vue';
 import ModalImage from '../modals/ModalImage.vue';
-import { getUsers, deleteUser, updateUserStatus, loginAsUser } from '../../api/adminRequests';
+import ModalConfirmation from '../modals/ModalConfirmation.vue';
+import { getUsers, deleteUser, updateUserStatus, loginAsUser, checkPassword } from '../../api/adminRequests';
 import { Users } from '../../models/Users';
 import { useParticipantStore } from '../../stores/admin/Participants';
+import { toast } from '../../utils/toast';
 
 const newPassword = ref('');
 const modalName = ref('participantsModal');
 const modalNameN = ref('participantsModalName');
 const modalImage = ref('participantsModalImage');
+const modalConfirmationId = ref('participantsModalConfirmation');
+const modalConfirmationMessage = ref('Esta acción no se puede deshacer, se eliminará el usuario y todos sus datos. ¿Desea continuar?');
 const users: Ref<Users> = ref([]);
 const activeUserId = ref(0);
 const participantsStore = useParticipantStore();
@@ -148,6 +153,18 @@ function checkForUpdate(){
     }else{
         return false;
     }
+}
+
+async function confirmDeleteUser(password: string, userId: number) {
+    const authenticaded = await checkPassword(password);
+
+    console.log(authenticaded);
+
+    if (authenticaded === 200) {
+        await deleteUsr(userId);
+        await loadUsers(true);
+    }
+    
 }
 </script>
 

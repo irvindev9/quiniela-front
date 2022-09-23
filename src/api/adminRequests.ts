@@ -345,3 +345,16 @@ export const clearCache = async() => {
     });
 }
 
+export const checkPassword = async(password: string) => {
+    const { status } = await axios.post(import.meta.env.VITE_API_URL + 'check_password', {password}, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+        },
+    }).catch((error) => {
+        toast(error.response.data.message, { type: 'error' });
+        return 401;
+    });
+
+    return status;
+}
+
