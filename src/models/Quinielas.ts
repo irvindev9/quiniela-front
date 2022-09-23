@@ -26,6 +26,7 @@ export type Week = {
   matches?: Matches;
   end_date: string;
   is_forced_open: number;
+  is_forced_open_quiniela: number;
 }
 
 export type Weeks = {

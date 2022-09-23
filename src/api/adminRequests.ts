@@ -71,8 +71,9 @@ export const deleteWeek: any = async(id: number) => {
     });
 }
 
-export const updateWeek: any = async(id: number) => {
-    const { data } = await axios.put(import.meta.env.VITE_API_URL + 'weeks/' + id, {}, {
+export const updateWeek: any = async(id: number, is_forced_open: number, is_forced_open_quiniela: number ) => {
+    const { data } = await axios.put(import.meta.env.VITE_API_URL + 'weeks/' + id, { is_forced_open, is_forced_open_quiniela }, 
+    {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },

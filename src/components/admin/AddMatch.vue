@@ -54,10 +54,15 @@
                                             <i class="bi bi-trash"></i> 
                                             Eliminar
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary" @click="update(week.id)">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" @click="update(week.id, (week.is_forced_open == 0 ? 1 : 0), week.is_forced_open_quiniela)">
                                             <i class="bi bi-door-open" v-if="week.is_forced_open"></i>
                                             <i class="bi bi-door-closed" v-else></i>
                                             {{ week.is_forced_open ? 'Cerrar' : 'Abrir' }} semana
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" @click="update(week.id, week.is_forced_open, (week.is_forced_open_quiniela == 0 ? 1 : 0) )">
+                                            <i class="bi bi-folder2-open" v-if="week.is_forced_open_quiniela"></i>
+                                            <i class="bi bi-folder2" v-else></i>
+                                            {{ week.is_forced_open_quiniela ? 'Cerrar' : 'Abrir' }} quinielas
                                         </button>
                                     </div>
                                 </div>
@@ -131,8 +136,9 @@ async function deleteW(id: number) {
     await get(true);
 }
 
-async function update(id: number) {
-    await updateWeek(id);
+async function update(id: number, is_forced_open: number, is_forced_open_quiniela: number) {
+
+    await updateWeek(id, is_forced_open, is_forced_open_quiniela);
 
     await get(true);
 }

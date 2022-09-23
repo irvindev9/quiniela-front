@@ -98,6 +98,10 @@ const results: Ref<UserResults> = ref([])
 const matches: Ref<Matches> = ref([])
 
 const isActive = computed(() => {
+  // is_forced_open ?
+  const open = weeks.value.find((week: Week) => week.id === current_week.value).is_forced_open
+
+  if(open == 1) { return true }
   // get end_date of current week
   let current_week_end_date = '2022-12-12 12:00:00';
   if(weeks.value.length > 0) {

@@ -12,7 +12,7 @@
                 <div id="mi-quiniela" class="card">
                     <div class="card-header bg-light d-flex justify-content-between">
                         <h5 class="m-0">Tu quiniela: {{userStore.name}}</h5>
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" v-if="isLocked">
+                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" v-if="!isLocked">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Guardando...
@@ -24,7 +24,7 @@
                     </div>
                     <div class="card-body">
                         <SelectTeam v-for="match in week[0].matches" :key="match.id" :match="match" @update="saveData"/> 
-                        <div class="lock-match align-middle" v-if="!isLocked">
+                        <div class="lock-match align-middle" v-if="isLocked">
                             <span>
                                 <i class="bi-lock"></i>
                                 <br>
@@ -39,7 +39,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="card-footer bg-light d-flex justify-content-end" v-if="isLocked">
+                    <div class="card-footer bg-light d-flex justify-content-end" v-if="!isLocked">
                         <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -91,21 +91,26 @@ async function get(){
 }
 
 function checkIfIsLocked(){
-    const force_open = week.value[0].is_forced_open;
+    const force_open = week.value[0].is_forced_open_quiniela;
+    console.log(force_open)
+
+    if(force_open) { 
+        isLocked.value = false;
+        return;
+    }
+
     const dateTime_to_close = new Date(week.value[0].end_date);
 
     new Date().toLocaleString("en-US", {timeZone: "America/Denver"});
 
     const today = new Date();
 
-    if(dateTime_to_close <= today){
+    console.log(dateTime_to_close <= today)
+
+    if(dateTime_to_close >= today){
         isLocked.value = false;
     }else{
-        if(force_open){
-            isLocked.value = false;
-        }else{
-            isLocked.value = true;
-        }
+        isLocked.value = true;
     }
 }
 
