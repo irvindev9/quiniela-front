@@ -7,7 +7,7 @@
             <div class="col-12 col-lg-10">
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4">
-                        <input type="text" class="form-control form-control-sm" placeholder="Semana 1" v-model="nameWeek">
+                        <input type="text" class="form-control form-control-sm" placeholder="Semana 1" name="name_of_the_week" v-model="nameWeek">
                     </div>
                     <div class="col-12 col-md-6 col-lg-4">
                         <input type="datetime-local" class="form-control form-control-sm" v-model="dateTime">
