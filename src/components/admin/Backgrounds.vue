@@ -79,11 +79,9 @@ const backgroundStore = useBackgroundStore()
 
 onMounted(async () => {
     if(checkForUpdate()) {
-        console.log('update')
         backgrounds.value = await getAllBackgrounds()
         backgroundStore.setBackgrounds(backgrounds.value)
     } else {
-        console.log('no update')
         backgrounds.value = backgroundStore.backgrounds
     }
     

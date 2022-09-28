@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container mb-5">
         <div class="row d-flex justify-content-center">
             <div class="col-12 col-md-10 col-lg-8 col-xl-6 mb-1">
                 <select class="form-select" name="semana" id="semana-selector" v-model="current_week" @change="get">
@@ -23,7 +23,7 @@
                         </button>
                     </div>
                     <div class="card-body">
-                        <SelectTeam v-for="match in week[0].matches" :key="match.id" :match="match" @update="saveData"/> 
+                        <SelectTeam v-for="match in week[0].matches" :key="match.id" :match="match" @update="saveData" :isValidated="isValidated"/> 
                         <div class="lock-match align-middle" v-if="isLocked">
                             <span>
                                 <i class="bi-lock"></i>
@@ -53,6 +53,7 @@
                 </div>
             </div>
         </div>
+        <ModalMessage :modalName="modalMessaheId" :message="modalMessageText" :title="modalTitle" />
     </div>
 </template>
 
@@ -62,14 +63,18 @@ import SelectTeam from '../components/miquiniela/SelectTeam.vue';
 import { getQuiniela, saveQuiniela, getWeeks } from '../api/quinielaRequests';
 import { useUserStore } from '../stores/UserStore';
 import { Weeks, Week } from '../models/Quinielas';
+import ModalMessage from '../components/modals/ModalMessage.vue';
+import '../../node_modules/bootstrap/dist/js/bootstrap.js';
 
 const userStore = useUserStore();
 
-
-
 const isLoading = ref(false)
 const isLocked = ref(false)
+const isValidated = ref(false)
 const current_week = ref(0)
+const modalMessaheId = ref('modalMessageMiQuiniela')
+const modalMessageText = ref('Debes seleccionar un equipo para cada partido')
+const modalTitle = ref('<i class="bi bi-exclamation-octagon"></i> Error')
 const weeks: Ref<Weeks> = ref([])
 const week: Ref<Week | any> = ref([{
     matches: []
@@ -78,7 +83,19 @@ const week: Ref<Week | any> = ref([{
 async function saveData(){
     isLoading.value = true
     if(current_week.value > 0){
-        await saveQuiniela(current_week.value, week.value[0].matches);
+        const number_of_matches = week.value[0].matches.length;
+        const number_of_selected_teams = week.value[0].matches.filter((match: any) => match.result_by_user !== null).length;
+
+        if(number_of_matches === number_of_selected_teams){
+            await saveQuiniela(current_week.value, week.value[0].matches);
+            isValidated.value = false;
+        }else{
+            // alert('Debes seleccionar un equipo ganador para cada partido');
+            const modal = document.getElementById(modalMessaheId.value);
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+            isValidated.value = true;
+        }
     }
     isLoading.value = false
 }
@@ -92,7 +109,6 @@ async function get(){
 
 function checkIfIsLocked(){
     const force_open = week.value[0].is_forced_open_quiniela;
-    console.log(force_open)
 
     if(force_open) { 
         isLocked.value = false;
@@ -104,8 +120,6 @@ function checkIfIsLocked(){
     new Date().toLocaleString("en-US", {timeZone: "America/Denver"});
 
     const today = new Date();
-
-    console.log(dateTime_to_close <= today)
 
     if(dateTime_to_close >= today){
         isLocked.value = false;

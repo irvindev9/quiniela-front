@@ -119,11 +119,9 @@ async function get(forceUpdate: Boolean = false) {
     }
 
     if(checkForUpdate()) {
-        console.log('update');
         weeks.value = await getWeeks();
         matchStore.setWeeks(weeks.value);
     } else {
-        console.log('no update');
         weeks.value = matchStore.weeks;
     }
 

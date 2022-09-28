@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="match match-1" v-if="match.id !== 0">
-            <div class="match-team border shadow-sm" :class="{'border-primary bg-light': (match.team_1.id == match.result_by_user?.team_id)}" @click="selectTeam(match.team_id)">
+            <div class="match-team border shadow-sm" :class="{'border-primary bg-light': (match.team_1.id == match.result_by_user?.team_id), 'border-danger bg-danger-light': validate}" @click="selectTeam(match.team_id)">
                 <img width="25" height="25" :src="get_img(match.team_1.logo)" alt="team1"> 
                 {{match.team_1.name}}
             </div>
             <div class="vs-title d-flex align-items-center">VS</div>
-            <div class="match-team border shadow-sm" :class="{'border-primary bg-light': (match.team_2.id == match.result_by_user?.team_id)}" @click="selectTeam(match.team_id_2)">
+            <div class="match-team border shadow-sm" :class="{'border-primary bg-light': (match.team_2.id == match.result_by_user?.team_id), 'border-danger bg-danger-light': validate}" @click="selectTeam(match.team_id_2)">
                 <img width="25" height="25" :src="get_img(match.team_2.logo)" alt="team2"> 
                 {{match.team_2.name}}
             </div>
@@ -15,6 +15,9 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import { onUpdated } from "@vue/runtime-core";
+
 const props = defineProps({
     match: {
         type: Object,
@@ -35,6 +38,11 @@ const props = defineProps({
             winner_id: 0
         })
     },
+    isValidated: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
 });
 
 function selectTeam(team: Number){
@@ -50,6 +58,12 @@ function selectTeam(team: Number){
 function get_img(logo: string) {
     return new URL(`../../assets/teams/${logo}`, import.meta.url).href;
 }
+
+const validate = ref((props.match.result_by_user == null && props.isValidated) ? true : false);
+
+onUpdated(() => {
+    validate.value = (props.match.result_by_user == null && props.isValidated) ? true : false;
+});
 </script>
 
 <style lang="scss">
@@ -73,6 +87,10 @@ function get_img(logo: string) {
     .match-team.active {
         background: #6c757d;
         color: white;
+    }
+
+    .bg-danger-light {
+        background: #f8d7da;
     }
 }
 </style>

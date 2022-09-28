@@ -117,11 +117,9 @@ async function loadUsers(forceUpdate: Boolean = false) {
     }
 
     if (checkForUpdate()) {
-        console.log('update');
         users.value = await getUsers();
         participantsStore.setParticipants(users.value);
     } else {
-        console.log('no update');
         users.value = participantsStore.participants;
     }
     
