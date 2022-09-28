@@ -78,7 +78,7 @@ const isValidated = ref(false)
 const current_week = ref(0)
 const modalMessaheId = ref('modalMessageMiQuiniela')
 const modalMessageText = ref('Debes seleccionar un equipo para cada partido')
-const modalTitle = ref('<i class="bi bi-exclamation-octagon"></i> Error')
+const modalTitle = ref('<i class="bi bi-exclamation-octagon"></i> Aviso')
 const weeks: Ref<Weeks> = ref([])
 const week: Ref<Week | any> = ref([{
     matches: []
