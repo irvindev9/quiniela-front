@@ -13,7 +13,6 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">
-              <span class="bi-exclamation-triangle bi"></span>
               Cerrrar
             </button>
           </div>
