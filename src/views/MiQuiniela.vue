@@ -54,6 +54,9 @@
             </div>
         </div>
         <ModalMessage :modalName="modalMessaheId" :message="modalMessageText" :title="modalTitle" />
+        <button type="button" :id="'button' + modalMessaheId" class="d-none" data-bs-toggle="modal" :data-bs-target="'#' + modalMessaheId">
+            Launch demo modal
+        </button>
     </div>
 </template>
 
@@ -64,9 +67,10 @@ import { getQuiniela, saveQuiniela, getWeeks } from '../api/quinielaRequests';
 import { useUserStore } from '../stores/UserStore';
 import { Weeks, Week } from '../models/Quinielas';
 import ModalMessage from '../components/modals/ModalMessage.vue';
-import '../../node_modules/bootstrap/dist/js/bootstrap.js';
 
 const userStore = useUserStore();
+
+
 
 const isLoading = ref(false)
 const isLocked = ref(false)
@@ -91,9 +95,9 @@ async function saveData(){
             isValidated.value = false;
         }else{
             // alert('Debes seleccionar un equipo ganador para cada partido');
-            const modal = document.getElementById(modalMessaheId.value);
-            const modalInstance = new bootstrap.Modal(modal);
-            modalInstance.show();
+            // press button by ref
+            const button: any = document.querySelector('#button' + modalMessaheId.value);
+            button?.click();
             isValidated.value = true;
         }
     }
