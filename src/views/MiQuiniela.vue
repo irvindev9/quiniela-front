@@ -94,8 +94,6 @@ async function saveData(){
             await saveQuiniela(current_week.value, week.value[0].matches);
             isValidated.value = false;
         }else{
-            // alert('Debes seleccionar un equipo ganador para cada partido');
-            // press button by ref
             const button: any = document.querySelector('#button' + modalMessaheId.value);
             button?.click();
             isValidated.value = true;

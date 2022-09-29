@@ -1,11 +1,20 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { toast } from '../utils/toast';
+import { closeSession } from './sessionRequests';
 
 export const getQuiniela = async (week_id: number) => {
-  const { data } = await axios.get(import.meta.env.VITE_API_URL + 'quiniela/' + week_id, {
+  let data = [];
+
+  await axios.get(import.meta.env.VITE_API_URL + 'quiniela/' + week_id, {
     headers: {
       Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+    }
+  }).then((response) => {
+    data = response.data;
+  }).catch((err) => {
+    if (err.response.status === 401) {
+      closeSession();
     }
   });
 
@@ -20,14 +29,25 @@ export const saveQuiniela = async (week_id: number, quiniela: any) => {
   }).then((res) => {
     toast('Quiniela guardada', {type: 'success', timeout: 1000});
   }).catch((err) => {
+    if (err.response.status === 401) {
+      closeSession();
+    }
     toast(err.response.data.message , { type: 'error' });
   });
 }
 
 export const getWeeks = async () => {
-  const { data } = await axios.get(import.meta.env.VITE_API_URL + 'quiniela/weeks', {
+  let data = [];
+
+  await axios.get(import.meta.env.VITE_API_URL + 'quiniela/weeks', {
     headers: {
       Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+    }
+  }).then((res) => {
+    data =  res.data;
+  }).catch((err) => {
+    if (err.response.status === 401) {
+      closeSession();
     }
   });
 
@@ -53,9 +73,17 @@ export const getBackgroundsImages = async () => {
 }
 
 export const getScore = async () => {
-  const { data } = await axios.get(import.meta.env.VITE_API_URL + 'user/score', {
+  let data = [];
+
+  await axios.get(import.meta.env.VITE_API_URL + 'user/score', {
     headers: {
       Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+    }
+  }).then((res) => {
+    data = res.data;
+  }).catch((err) => {
+    if (err.response.status === 401) {
+      closeSession();
     }
   });
 

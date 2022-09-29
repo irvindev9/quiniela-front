@@ -67,3 +67,11 @@ export const registerUser: any = async (data: any) => {
     toast(err.response.data.message, {type: 'warning'});
   });
 }
+
+export const closeSession: any = async () => {
+  const userStore = useUserStore();
+  await logout();
+  userStore.logout();
+  toast('Sesión caducada', {type: 'info'});
+  router.push('/');
+}

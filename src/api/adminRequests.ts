@@ -4,44 +4,75 @@ import { toast } from "../utils/toast";
 import { getUserInfo } from "./sessionRequests";
 import { useUserStore } from '../stores/UserStore';
 import router from '../router';
+import { closeSession } from './sessionRequests';
 
 export const getSeasons: any = async() => {
-    const { data } = await axios.get(import.meta.env.VITE_API_URL + 'seasons', {
+    let data = [];
+
+    await axios.get(import.meta.env.VITE_API_URL + 'seasons', {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
 
     return data;
 }
 
 export const updateSeason: any = async(id: number) => {
-    const { data } = await axios.put(import.meta.env.VITE_API_URL + 'seasons/' + id, {}, {
+    let data = [];
+
+    await axios.put(import.meta.env.VITE_API_URL + 'seasons/' + id, {}, {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+        toast('Temporada Actualizada', {});
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
-
-    toast('Temporada Actualizada', {});
     
     return data;
 }
 
 export const updateSeasonRegister: any = async(id: number, status: any) => {
-    const { data } = await axios.put(import.meta.env.VITE_API_URL + 'seasons/' + id + '/register', { status }, {
+    let data = [];
+
+    await axios.put(import.meta.env.VITE_API_URL + 'seasons/' + id + '/register', { status }, {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
     
     return data;
 }
 
 export const saveWeek: any = async(week: any) => {
-    const { data } = await axios.post(import.meta.env.VITE_API_URL + 'weeks', week, {
+    let data = [];
+    await axios.post(import.meta.env.VITE_API_URL + 'weeks', week, {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
 
     toast('ok!', {});
@@ -50,10 +81,18 @@ export const saveWeek: any = async(week: any) => {
 }
 
 export const getWeeks: any = async(id: number) => {
-    const { data } = await axios.get(import.meta.env.VITE_API_URL + 'weeks', {
+    let data = [];
+
+    await axios.get(import.meta.env.VITE_API_URL + 'weeks', {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
     
     return data;
@@ -72,67 +111,112 @@ export const deleteWeek: any = async(id: number) => {
 }
 
 export const updateWeek: any = async(id: number, is_forced_open: number, is_forced_open_quiniela: number ) => {
-    const { data } = await axios.put(import.meta.env.VITE_API_URL + 'weeks/' + id, { is_forced_open, is_forced_open_quiniela }, 
+    let data = [];
+
+    await axios.put(import.meta.env.VITE_API_URL + 'weeks/' + id, { is_forced_open, is_forced_open_quiniela }, 
     {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+        toast('ok!', {});
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
-
-    toast('ok!', {});
 
     return data;
 }
 
 export const saveMatch: any = async(match: any) => {
-    const { data } = await axios.post(import.meta.env.VITE_API_URL + 'matches', match, {
+    let data = [];
+
+    await axios.post(import.meta.env.VITE_API_URL + 'matches', match, {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+        toast('ok!', {});
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
-
-    toast('ok!', {});
     
     return data;
 }
 
 export const getUsers: any = async() => {
-    const { data } = await axios.get(import.meta.env.VITE_API_URL + 'users', {
+    let data = [];
+
+    await axios.get(import.meta.env.VITE_API_URL + 'users', {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
     
     return data;
 }
 
 export const addMatch: any = async(id: number, team_id: number, team_id_2: number) => {
-    const { data } = await axios.post(import.meta.env.VITE_API_URL+ 'match/' + id , { id, team_id, team_id_2 }, {
+    let data = [];
+
+    await axios.post(import.meta.env.VITE_API_URL+ 'match/' + id , { id, team_id, team_id_2 }, {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+        toast('ok!', {});
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
-
-    toast('ok!', {});
     
     return data;
 } 
 
 export const getMatches: any = async(id: number) => {
-    const { data } = await axios.get(import.meta.env.VITE_API_URL + 'matches/' + id, {
+    let data = [];
+
+    await axios.get(import.meta.env.VITE_API_URL + 'matches/' + id, {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
     
     return data;
 }
 
 export const getMatch: any = async(id: number) => {
-    const { data } = await axios.get(import.meta.env.VITE_API_URL + 'match/' + id, {
+    let data = [];
+    
+    await axios.get(import.meta.env.VITE_API_URL + 'match/' + id, {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
     
     return data;
@@ -151,13 +235,20 @@ export const deleteMatch: any = async(id: number) => {
 }
 
 export const updateMatch: any = async(id: number, match: any) => {
-    const { data } = await axios.put(import.meta.env.VITE_API_URL + 'match/' + id, match, {
+    let data = [];
+
+    await axios.put(import.meta.env.VITE_API_URL + 'match/' + id, match, {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+        toast('ok!', {});
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
-
-    toast('ok!', {});
     
     return data;
 }
@@ -230,6 +321,9 @@ export const loginAsUser: any = async(userId: number) => {
 
         router.push('/mi-quiniela');
     }).catch((error) => {
+        if (error.response.status === 401) {
+            closeSession();
+        }
         toast(error.response.data.message, { type: 'error' });
     });
 }
@@ -248,10 +342,18 @@ export const uploadBackgroundFile = async(file: any) => {
 }
 
 export const getAllBackgrounds = async() => {
-    const { data } = await axios.get(import.meta.env.VITE_API_URL + 'backgrounds', {
+    let data = [];
+    
+    await axios.get(import.meta.env.VITE_API_URL + 'backgrounds', {
         headers: {
             Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
         },
+    }).then((res) => {
+        data = res.data;
+    }).catch((err) => {
+        if (err.response.status === 401) {
+            closeSession();
+        }
     });
 
     return data;
