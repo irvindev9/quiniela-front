@@ -94,8 +94,6 @@ async function saveData(){
             await saveQuiniela(current_week.value, week.value[0].matches);
             isValidated.value = false;
         }else{
-            // alert('Debes seleccionar un equipo ganador para cada partido');
-            // press button by ref
             const button: any = document.querySelector('#button' + modalMessaheId.value);
             button?.click();
             isValidated.value = true;
@@ -114,21 +112,20 @@ async function get(){
 function checkIfIsLocked(){
     const force_open = week.value[0].is_forced_open_quiniela;
 
-    if(force_open) { 
+    if (force_open) { 
         isLocked.value = false;
-        return;
-    }
+    } else {
+        const dateTime_to_close = new Date(week.value[0].end_date);
 
-    const dateTime_to_close = new Date(week.value[0].end_date);
+        new Date().toLocaleString("en-US", {timeZone: "America/Denver"});
 
-    new Date().toLocaleString("en-US", {timeZone: "America/Denver"});
+        const today = new Date();
 
-    const today = new Date();
-
-    if(dateTime_to_close >= today){
-        isLocked.value = false;
-    }else{
-        isLocked.value = true;
+        if(dateTime_to_close >= today){
+            isLocked.value = false;
+        }else{
+            isLocked.value = true;
+        }
     }
 }
 
