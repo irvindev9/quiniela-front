@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.5",
+    "@sentry/tracing": "^7.14.0",
+    "@sentry/vue": "^7.14.0",
     "@types/js-cookie": "^3.0.1",
     "@vuelidate/core": "^2.0.0-alpha.41",
     "@vuelidate/validators": "^2.0.0-alpha.29",
