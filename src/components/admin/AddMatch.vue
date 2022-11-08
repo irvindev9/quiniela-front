@@ -33,7 +33,7 @@
                         <div class="accordion-body">
                             <div class="row">
                                 <div class="col-12 text-end">
-                                    <small class="text-muted mx-5">Cierra el: {{week.end_date}}</small>
+                                    <small class="text-muted mx-5 clickable" data-bs-toggle="modal" :data-bs-target="'#' + modalAdjustDateTime" @click="activeWeekId = week.id" >Cierra el: {{week.end_date}}</small>
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                         <button 
                                             type="button" 
@@ -68,12 +68,14 @@
                                 </div>
                             </div>
                             <Matches :id="week.id" :matches="week.matches" @refresh="get" :isOpen="validateIfWeekIsOpen(week.id)" />
-                            <ModalConfirmation  :modalName="modalConfirmationId" :targetId="activeWeekId" :message="modalConfirmationMessage" @deleteTarget="confirmDeleteWeek" />
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <ModalConfirmation  :modalName="modalConfirmationId" :targetId="activeWeekId" :message="modalConfirmationMessage" @deleteTarget="confirmDeleteWeek" />
+        <ModalAdjustDate :modalName="modalAdjustDateTime" :weekId="activeWeekId" :title="modalAdjustDateMessage" @updateDate="updateDate" />
     </div>
 </template>
 
@@ -84,6 +86,7 @@ import { useAdminStore } from '../../stores/AdminStore';
 import { useMatchStore } from '../../stores/admin/MatchStore';
 import Matches from './addmatch/Matches.vue';
 import ModalConfirmation from '../modals/ModalConfirmation.vue';
+import ModalAdjustDate from '../modals/ModalAdjustDate.vue';
 import { Weeks } from '../../models/Quinielas';
 
 const weeks: Ref<Weeks>= ref({});
@@ -96,6 +99,8 @@ const matchesComponent = ref()
 const isLoading = ref(false)
 const modalConfirmationId = ref('modalConfirmationWeek')
 const modalConfirmationMessage = ref('Esta acción no se puede deshacer, se eliminara la semana y todas las quinielas asociadas a esta. ¿Desea continuar?')
+const modalAdjustDateTime = ref('modalAdjustDate')
+const modalAdjustDateMessage = ref('Realizar el cambio de fecha de cierre de la semana')
 const activeWeekId = ref(0)
 
 onBeforeMount(async () => {
@@ -189,6 +194,10 @@ function checkForUpdate() {
         return false;
     }
 }
+
+async function updateDate() {
+    await get(true);
+}
 </script>
 
 <style lang="scss">
@@ -196,5 +205,9 @@ function checkForUpdate() {
     span.badge {
         cursor: pointer;
     }
+}
+
+.clickable {
+    cursor: pointer;
 }
 </style>

@@ -198,6 +198,18 @@ export const updatePassword: any = async(userId: number, password: string, passw
     });
 }
 
+export const updateDate: any = async(weekId: number, date: string) => {
+    await axios.put(import.meta.env.VITE_API_URL + 'weeks/' + weekId + '/date', { date }, {
+        headers: {
+            Authorization: `Bearer ${Cookies.get('sanctum-session')}`,
+        },
+    }).then((response) => {
+        toast('ok!', {});
+    }).catch((error) => {
+        toast(error.response.data.message, { type: 'error' });
+    });
+}
+
 export const updateUserName: any = async(userId: number, name: string) => {
     await axios.put(import.meta.env.VITE_API_URL + 'participants/' + userId + '/name', { name }, {
         headers: {
