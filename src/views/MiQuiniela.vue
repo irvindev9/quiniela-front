@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="card-footer bg-light d-flex justify-content-end" v-if="!isLocked">
-                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData">
+                        <button class="btn btn-outline-primary btn-sm" type="button" @click="saveData" :disabled="isLoading">
                             <div v-if="isLoading">
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 Guardando...
