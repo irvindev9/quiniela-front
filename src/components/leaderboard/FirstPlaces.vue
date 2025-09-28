@@ -12,6 +12,12 @@
         <small>{{props.players[1].name}}</small>
         <br>
         <span class="badge rounded-pill bg-light text-dark">{{props.players[1].points}} pts</span>
+        <br>
+        <span class="badge rounded border shadow-sm text-dark" v-if="props.players[1].diff_from_last_week && props.players[1].diff_from_last_week !== 0">
+          {{props.players[1].diff_from_last_week ? props.players[1].diff_from_last_week : 0}}
+          <i class="bi bi-caret-up-fill" :class="{'text-success': (props.players[1].diff_from_last_week && props.players[1].diff_from_last_week > 0)}" v-if="props.players[1].diff_from_last_week && props.players[1].diff_from_last_week > 0"></i>
+          <i class="bi bi-caret-down-fill" :class="{'text-danger': (props.players[1].diff_from_last_week && props.players[1].diff_from_last_week < 0)}" v-if="props.players[1].diff_from_last_week && props.players[1].diff_from_last_week < 0"></i>
+        </span>
       </p>
     </div>
     <div class="col" v-if="props.players[0]">
@@ -26,6 +32,12 @@
         <small>{{props.players[0].name}}</small>
         <br>
         <span class="badge rounded-pill bg-light text-dark">{{props.players[0].points}} pts</span>
+        <br>
+        <span class="badge rounded border shadow-sm text-dark" v-if="props.players[0].diff_from_last_week && props.players[0].diff_from_last_week !== 0">
+          {{props.players[0].diff_from_last_week ? props.players[0].diff_from_last_week : 0}}
+          <i class="bi bi-caret-up-fill" :class="{'text-success': (props.players[0].diff_from_last_week && props.players[0].diff_from_last_week > 0)}" v-if="props.players[0].diff_from_last_week && props.players[0].diff_from_last_week > 0"></i>
+          <i class="bi bi-caret-down-fill" :class="{'text-danger': (props.players[0].diff_from_last_week && props.players[0].diff_from_last_week < 0)}" v-if="props.players[0].diff_from_last_week && props.players[0].diff_from_last_week < 0"></i>
+        </span>
       </p>
     </div>
     <div class="col second-place" v-if="props.players[2]">
@@ -40,19 +52,23 @@
         <small>{{props.players[2].name}}</small>
         <br>
         <span class="badge rounded-pill bg-light text-dark">{{props.players[2].points}} pts</span>
+        <br>
+        <span class="badge rounded border shadow-sm text-dark" v-if="props.players[2].diff_from_last_week && props.players[2].diff_from_last_week !== 0">
+          {{props.players[2].diff_from_last_week ? props.players[2].diff_from_last_week : 0}}
+          <i class="bi bi-caret-up-fill" :class="{'text-success': (props.players[2].diff_from_last_week && props.players[2].diff_from_last_week > 0)}" v-if="props.players[2].diff_from_last_week && props.players[2].diff_from_last_week > 0"></i>
+          <i class="bi bi-caret-down-fill" :class="{'text-danger': (props.players[2].diff_from_last_week && props.players[2].diff_from_last_week < 0)}" v-if="props.players[2].diff_from_last_week && props.players[2].diff_from_last_week < 0"></i>
+        </span>
       </p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  players: {
-    type: Array,
-    required: true,
-    default: () => [],
-  },
-});
+import { Players } from '../../models/Quinielas';
+
+const props = defineProps<{
+  players: Players[];
+}>();
 
 function get_img(logo: string) {
   const logo_padded = logo.toString().padStart(2, "0");

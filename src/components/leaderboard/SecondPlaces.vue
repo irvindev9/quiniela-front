@@ -16,6 +16,11 @@
       <div class="pts-holder">
         <span class="badge rounded-pill bg-light text-dark">{{ player.points }} pts</span>
       </div> &nbsp;
+      <div class="old-place rounded border shadow-sm">
+        <i class="bi bi-caret-up-fill" :class="{'text-success': (player.diff_from_last_week && player.diff_from_last_week > 0)}"></i>
+        <span class="place">{{ player.diff_from_last_week ? player.diff_from_last_week : 0 }}</span>
+        <i class="bi bi-caret-down-fill" :class="{'text-danger': (player.diff_from_last_week && player.diff_from_last_week < 0)}"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -69,6 +74,26 @@ function get_img(logo: string) {
   }
   .player:hover {
     background: rgba(180, 180, 180, 0.1);
+  }
+
+  .old-place {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    justify-content: center;
+    min-width: 25px;
+    padding: 0 2px;
+    height: 100%;
+  }
+
+  .old-place i {
+    font-size: 10px;
+    color: rgba(180, 180, 180, 0.5);
+  }
+
+  .old-place span.place {
+    font-size: 10px;
+    font-weight: bold;
   }
 }
 </style>

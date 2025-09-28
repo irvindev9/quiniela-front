@@ -50,6 +50,8 @@ export type Player = {
   position: number;
   points: number;
   img: string;
+  diff_from_last_week: number;
+  team_id: number;
 }
 
 export type Players = {
