@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap');
+
+:root {
+  --green-dark: oklch(18% 0.06 145);
+  --green-mid: oklch(28% 0.09 145);
+  --green-accent: oklch(52% 0.2 145);
+  --green-light: oklch(62% 0.18 145);
+  --gold: oklch(74% 0.18 85);
+  --white: oklch(99% 0.005 85);
+  --text-dark: oklch(22% 0.03 250);
+  --text-mid: oklch(45% 0.03 250);
+  --text-light: oklch(65% 0.02 250);
+  --danger: oklch(62% 0.22 25);
+  --gold-light: oklch(92% 0.1 85);
+  --silver: oklch(78% 0.01 250);
+  --bronze: oklch(65% 0.1 55);
+  --card-bg: oklch(98% 0.005 85);
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'Nunito', sans-serif;
+}
+
+.app {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow-y: auto;
+}

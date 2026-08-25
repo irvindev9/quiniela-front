@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(npx vue-tsc *)",
+      "Bash(cp \"/Users/irvin/.claude/projects/-Users-irvin-Documents-www-proyectos-personales-quinielas-front/5d9a327d-a129-4d56-9418-093c31e29e94/tool-results/webfetch-1777671289146-iey957.bin\" /tmp/design3.gz)",
+      "Bash(gunzip -f /tmp/design3.gz)",
+      "Bash(mkdir -p /tmp/design_files3)",
+      "Bash(tar -xf /tmp/design3 -C /tmp/design_files3)",
+      "Read(//tmp/design_files3/quiniela/project/**)",
+      "Bash(cp \"/Users/irvin/.claude/projects/-Users-irvin-Documents-www-proyectos-personales-quinielas-front/5d9a327d-a129-4d56-9418-093c31e29e94/tool-results/webfetch-1777672477032-hfowpm.bin\" /tmp/design4.gz)",
+      "Bash(gunzip -f /tmp/design4.gz)",
+      "Bash(mkdir -p /tmp/design_files4)",
+      "Bash(tar -xf /tmp/design4 -C /tmp/design_files4)",
+      "Read(//tmp/design_files4/quiniela/project/**)"
+    ]
+  }
+}

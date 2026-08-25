@@ -1,79 +1,214 @@
 <template>
-  <div class="register-form p-5">
-    <div class="form-group title">
-      <h3 class="text-center">Registro</h3>
+  <div class="register-form">
+    <div class="form-title">Crear cuenta</div>
+    <div class="form-subtitle">Únete a la quiniela con tus amigos</div>
+
+    <div class="field">
+      <label>Número de WhatsApp</label>
+      <input
+        type="tel"
+        placeholder="Ej. 6641234567"
+        v-model="whatsNumber"
+        :class="{ error: errors.whatsNumber }"
+      />
+      <span v-if="errors.whatsNumber" class="field-error">{{ errors.whatsNumber }}</span>
     </div>
-    <div class="form-group">
-        <label for="whats">Número de WhatsApp</label>
-        <input type="text" class="form-control" id="whats" placeholder="Número de WhatsApp" v-model="whatsNumber"/>
+
+    <div class="field">
+      <label>Nombre</label>
+      <input
+        type="text"
+        placeholder="¿Cómo te llamas?"
+        v-model="name"
+        :class="{ error: errors.name }"
+      />
+      <span v-if="errors.name" class="field-error">{{ errors.name }}</span>
     </div>
-    <div class="form-group">
-        <label for="password">Contraseña</label>
-        <input type="password" class="form-control" id="password" placeholder="Contraseña" v-model="password"/>
-    </div>
-    <div class="form-group">
-        <label for="password_confirm">Confirmar contraseña</label>
-        <input type="password" class="form-control" id="password_confirm" placeholder="Contraseña" v-model="password_confirm"/>
-    </div>
-    <div class="form-group">
-        <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" placeholder="Nombre" v-model="name"/>
-    </div>
-    <div class="form-group">
-        <label for="team">Equipo</label>
-        <select class="form-control" id="team" v-model="favorite_team">
-            <option v-for="team in team_options" :key="team.id" :value="team.id">{{team.name}}</option>
-        </select>
-    </div>
-    <div class="form-group mt-3 text-end">
-      <button class="btn btn-outline-primary btn-block border-light mx-1" @click="$emit('changeBetweenPages')">Ya tengo cuenta</button>
-      <button class="btn btn-primary btn-block" @click="register">
-        <div v-if="!isLoading">
-          Registrarse
+
+    <div class="field-row">
+      <div class="field">
+        <label>Contraseña</label>
+        <div class="input-wrap">
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            placeholder="Contraseña"
+            v-model="password"
+            :class="{ error: errors.password }"
+          />
+          <button class="toggle-pw" type="button" @click="showPassword = !showPassword">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
         </div>
-        <div v-else>
-          <div class="spinner-border text-light" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
+        <span v-if="errors.password" class="field-error">{{ errors.password }}</span>
+      </div>
+      <div class="field">
+        <label>Confirmar contraseña</label>
+        <input
+          :type="showPassword ? 'text' : 'password'"
+          placeholder="Repite"
+          v-model="passwordConfirm"
+          :class="{ error: errors.passwordConfirm }"
+        />
+        <span v-if="errors.passwordConfirm" class="field-error">{{ errors.passwordConfirm }}</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Equipo favorito</label>
+      <div class="team-grid">
+        <div
+          v-for="team in teamOptions"
+          :key="team.id"
+          class="team-opt"
+          :class="{ selected: favoriteTeam === team.id }"
+          @click="favoriteTeam = team.id"
+        >
+          <img :src="teamLogo(team.id)" :alt="team.name" />
+          <span>{{ shortName(team.name) }}</span>
         </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-secondary" @click="$emit('changeBetweenPages')">Ya tengo cuenta</button>
+      <button class="btn-primary" @click="register" :disabled="isLoading">
+        <div v-if="isLoading" class="spinner-sm"></div>
+        {{ isLoading ? 'Registrando...' : 'Registrarse' }}
       </button>
+    </div>
+
+    <div class="switch-text">
+      ¿Ya tienes cuenta?
+      <button @click="$emit('changeBetweenPages')">Inicia sesión</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { registerUser } from '../../api/sessionRequests';
-import { teams } from '../../utils/teams';
+import { ref, reactive } from 'vue'
+import { registerUser } from '../../api/sessionRequests'
+import { teams } from '../../utils/teams'
 
-const whatsNumber = ref('');
-const password = ref('');
-const password_confirm = ref('');
-const name = ref('');
-const isLoading = ref(false);
-const team_options = ref(teams());
-const favorite_team = ref(1);
+defineEmits(['changeBetweenPages'])
+
+const whatsNumber = ref('')
+const password = ref('')
+const passwordConfirm = ref('')
+const name = ref('')
+const showPassword = ref(false)
+const isLoading = ref(false)
+const favoriteTeam = ref(1)
+const teamOptions = ref(teams())
+
+const errors = reactive({
+  whatsNumber: '' as string,
+  name: '' as string,
+  password: '' as string,
+  passwordConfirm: '' as string
+})
+
+function teamLogo(id: number): string {
+  return new URL(`../../assets/teams/team_${String(id).padStart(2, '0')}.png`, import.meta.url).href
+}
+
+function shortName(fullName: string): string {
+  return fullName.split(' ').pop() || fullName
+}
+
+function validate(): boolean {
+  errors.whatsNumber = /^\d{10,}$/.test(whatsNumber.value) ? '' : 'Ingresa un número válido (mín. 10 dígitos)'
+  errors.name = name.value.trim().length >= 2 ? '' : 'Ingresa tu nombre'
+  errors.password = password.value.length >= 6 ? '' : 'Mínimo 6 caracteres'
+  errors.passwordConfirm = password.value === passwordConfirm.value ? '' : 'Las contraseñas no coinciden'
+
+  return !errors.whatsNumber && !errors.name && !errors.password && !errors.passwordConfirm
+}
 
 async function register() {
-  isLoading.value = true;
+  if (!validate()) return
 
+  isLoading.value = true
   await registerUser({
     email: whatsNumber.value,
     password: password.value,
-    password_confirmation: password_confirm.value,
-    name: name.value, 
-    favorite_team: favorite_team.value
-  });
-
-  isLoading.value = false;
+    password_confirmation: passwordConfirm.value,
+    name: name.value,
+    favorite_team: favoriteTeam.value
+  })
+  isLoading.value = false
 }
-
 </script>
 
 <style lang="scss">
 .register-form {
-  .form-group {
-    margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ── TEAM GRID ── */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.team-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 2px;
+  border-radius: 8px;
+  border: 2px solid oklch(90% 0.01 145);
+  cursor: pointer;
+  transition: all 0.13s;
+  background: white;
+
+  &:hover {
+    border-color: var(--green-accent);
+    background: oklch(96% 0.03 145);
+  }
+
+  &.selected {
+    border-color: var(--green-accent);
+    background: oklch(95% 0.05 145);
+
+    span { color: var(--green-accent); }
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+
+  span {
+    font-size: 0.55rem;
+    font-weight: 700;
+    color: var(--text-mid);
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  @media (max-width: 768px) {
+    background: oklch(22% 0.07 145);
+    border-color: oklch(32% 0.08 145);
+
+    &:hover { background: oklch(26% 0.08 145); }
+    &.selected { background: oklch(26% 0.09 145); }
+
+    span { color: oklch(65% 0.06 145); }
   }
 }
 </style>

@@ -1,99 +1,118 @@
 <template>
-  <div class="second-places row mx-0 px-2">
-    <div class="col-12 rounded border player py-2 my-1 shadow-sm" v-for="player in players" :key="player.user_id">
-      <div class="place-holder">
-        <span class="place">{{ (player.position).toString().padStart(2, '0') }}.</span>
+  <div class="leaderboard-list">
+    <div
+      v-for="player in players"
+      :key="player.user_id"
+      class="lb-row"
+      :class="{ me: isMe(player.name) }"
+    >
+      <div class="lb-rank">{{ player.position.toString().padStart(2, '0') }}</div>
+      <div class="lb-player">
+        <div class="lb-avatar">
+          <img :src="avatarSrc(player)" :alt="player.name" />
+        </div>
+        <div class="lb-name">{{ player.name }}{{ isMe(player.name) ? ' (tú)' : '' }}</div>
       </div>
-      <div class="player-img">
-        <img :src="player.img" alt="img" v-if="player.img">
-        <img :src="get_img(player.team_id)" alt="img" v-else>
-      </div>
-      <div class="player-info px-3">
-        <p class="mb-0">
-          <small>{{player.name}}</small>
-        </p>
-      </div>
-      <div class="pts-holder">
-        <span class="badge rounded-pill bg-light text-dark">{{ player.points }} pts</span>
-      </div> &nbsp;
-      <div class="old-place rounded border shadow-sm">
-        <i class="bi bi-caret-up-fill" :class="{'text-success': (player.diff_from_last_week && player.diff_from_last_week > 0)}"></i>
-        <span class="place">{{ player.diff_from_last_week ? player.diff_from_last_week : 0 }}</span>
-        <i class="bi bi-caret-down-fill" :class="{'text-danger': (player.diff_from_last_week && player.diff_from_last_week < 0)}"></i>
+      <div class="lb-pts">{{ player.points }} pts</div>
+      <div
+        class="lb-diff"
+        :class="{ up: player.diff_from_last_week > 0, down: player.diff_from_last_week < 0 }"
+      >
+        {{ player.diff_from_last_week > 0 ? '▲' : player.diff_from_last_week < 0 ? '▼' : '–' }}
+        {{ Math.abs(player.diff_from_last_week ?? 0) || '' }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Players } from '../../models/Quinielas';
+import { useUserStore } from '../../stores/UserStore'
+import type { Player } from '../../models/Quinielas'
 
-const props = defineProps<{
-  players: Players,
-}>();
+const props = defineProps<{ players: Player[] }>()
+const userStore = useUserStore()
 
-function get_img(logo: string) {
-  const logo_padded = logo.toString().padStart(2, "0");
-  return new URL(`../../assets/teams/team_${logo_padded}.png`, import.meta.url).href;
+function isMe(name: string) {
+  return !!userStore.name && name === userStore.name
+}
+
+function avatarSrc(player: Player) {
+  if (player.img) return player.img
+  const padded = player.team_id.toString().padStart(2, '0')
+  return new URL(`../../assets/teams/team_${padded}.png`, import.meta.url).href
 }
 </script>
 
 <style lang="scss">
-.second-places {
+.leaderboard-list {
+  padding: 8px 16px 16px;
+}
+
+.lb-row {
+  display: grid;
+  grid-template-columns: 36px 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  transition: background 0.12s;
+
+  &:hover { background: oklch(94% 0.01 145); }
+  & + & { border-top: 1px solid oklch(93% 0.01 145); }
+
+  &.me {
+    background: oklch(95% 0.04 145);
+
+    .lb-name { color: var(--green-accent); }
+  }
+}
+
+.lb-rank {
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: var(--text-light);
+  text-align: center;
+}
+
+.lb-player {
   display: flex;
-  .player {
-    display: flex;
-    align-items: center;
-    .place-holder {
-      text-align: initial;
-      span.place {
-        font-size: 1rem;
-        font-weight: bold;
-        color: rgba(180, 180, 180, 0.5);
-        padding-right: 10px;
-      }
-    }
-    .player-img {
-      text-align: start;
-      border-radius: 50%;
-      overflow: hidden;
-      position: relative;
-      border: 1px solid rgba(180, 180, 180, 0.5);
+  align-items: center;
+  gap: 10px;
+}
 
-      img {
-        width: 35px;
-        height: 35px;
-        object-fit: cover;
+.lb-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid oklch(88% 0.02 145);
+  flex-shrink: 0;
 
-      }
-    }
-    .pts-holder {
-      flex-grow: 1;
-      text-align: right;
-    }
-  }
-  .player:hover {
-    background: rgba(180, 180, 180, 0.1);
-  }
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
 
-  .old-place {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: center;
-    justify-content: center;
-    min-width: 25px;
-    padding: 0 2px;
-    height: 100%;
-  }
+.lb-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
 
-  .old-place i {
-    font-size: 10px;
-    color: rgba(180, 180, 180, 0.5);
-  }
+.lb-pts {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--green-accent);
+  white-space: nowrap;
+}
 
-  .old-place span.place {
-    font-size: 10px;
-    font-weight: bold;
-  }
+.lb-diff {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  &.up   { color: var(--green-accent); }
+  &.down { color: var(--danger); }
 }
 </style>

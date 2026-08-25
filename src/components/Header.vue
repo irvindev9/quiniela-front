@@ -1,83 +1,202 @@
 <template>
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#" @click="redirect('/')">
-                    Quiniela | Luis Lopez
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" :class="{'active': route.name === 'Admin'}" href="#" @click="redirect('admin')" v-if="userStore.isAuthenticated && userStore.role_id == 1">Panel Admin</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" :class="{'active': route.name === 'Marcador'}" href="#" @click="redirect('marcador')">Marcador</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" :class="{'active': route.name === 'Quinielas'}" href="#" @click="redirect('quinielas')">Todas las quinielas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" :class="{'active': route.name === 'MiQuiniela'}" href="#" @click="redirect('mi-quiniela')" v-if="userStore.isAuthenticated">Mi quiniela</a>
-                        </li>
-                        <li class="nav-item dropdown" v-if="userStore.isAuthenticated">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                {{userStore.name}}
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href="#" @click="redirect('/')">Perfil</a></li>
-                                <li><a class="dropdown-item" href="#" @click="logout">Cerrar sesión</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+  <nav class="app-nav">
+    <a class="nav-brand" href="#" @click.prevent="router.push('/')">
+      <img :src="logo" alt="logo" />
+      <span class="nav-brand-text">Quiniela <span>NFL</span></span>
+    </a>
+
+    <ul class="app-nav-links">
+      <li v-if="userStore.isAuthenticated && userStore.role_id == 1">
+        <a href="#" :class="{ active: route.name === 'Admin' }" @click.prevent="router.push('admin')">Panel Admin</a>
+      </li>
+      <li>
+        <a href="#" :class="{ active: route.name === 'Marcador' }" @click.prevent="router.push('marcador')">Marcador</a>
+      </li>
+      <li>
+        <a href="#" :class="{ active: route.name === 'Quinielas' }" @click.prevent="router.push('quinielas')">Todas las quinielas</a>
+      </li>
+      <li v-if="userStore.isAuthenticated">
+        <a href="#" :class="{ active: route.name === 'MiQuiniela' }" @click.prevent="router.push('mi-quiniela')">Mi quiniela</a>
+      </li>
+    </ul>
+
+    <div v-if="userStore.isAuthenticated" class="nav-user-wrap" v-click-outside="() => showDropdown = false">
+      <div class="nav-user" @click="showDropdown = !showDropdown">
+        <div class="nav-avatar">{{ userInitial }}</div>
+        <span class="nav-user-name">{{ userStore.name }}</span>
+      </div>
+      <div v-if="showDropdown" class="nav-dropdown">
+        <a href="#" @click.prevent="router.push('/'); showDropdown = false">Perfil</a>
+        <a href="#" @click.prevent="doLogout">Cerrar sesión</a>
+      </div>
     </div>
+  </nav>
 </template>
 
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useUserStore } from '../stores/UserStore';
-import { logout as logoutCookies } from '../api/sessionRequests';
+import { useUserStore } from '../stores/UserStore'
+import { logout as logoutCookies } from '../api/sessionRequests'
 
-const userStore = useUserStore();
-
+const userStore = useUserStore()
 const router = useRouter()
 const route = useRoute()
+const showDropdown = ref(false)
+const logo = new URL('../assets/logo.png', import.meta.url).href
+const userInitial = computed(() => {
+  const name = userStore.name as unknown as string
+  return name?.charAt(0)?.toUpperCase() ?? ''
+})
 
-function redirect(to: string) {
-  router.push(to)
+const clickOutsideHandlers = new WeakMap<HTMLElement, (e: MouseEvent) => void>()
+
+const vClickOutside = {
+  mounted(el: HTMLElement, binding: any) {
+    const handler = (e: MouseEvent) => {
+      if (!el.contains(e.target as Node)) binding.value()
+    }
+    clickOutsideHandlers.set(el, handler)
+    document.addEventListener('click', handler)
+  },
+  unmounted(el: HTMLElement) {
+    const handler = clickOutsideHandlers.get(el)
+    if (handler) document.removeEventListener('click', handler)
+  }
 }
 
-function logout() {
-  userStore.logout();
-  logoutCookies();
+function doLogout() {
+  showDropdown.value = false
+  userStore.logout()
+  logoutCookies()
   router.push('/')
 }
 </script>
 
 <style lang="scss">
-nav.bg-light {
-    background: white !important;;
+.app-nav {
+  background: oklch(14% 0.05 145);
+  border-bottom: 2px solid oklch(24% 0.08 145);
+  padding: 0 24px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
 }
 
-.navbar {
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--white);
+  flex-shrink: 0;
 
-    .nav-link.active {
-        background: rgba(200, 200, 200, 0.1);
-        border-radius: 10px;
-        font-weight: 500;
-    }
+  img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
 }
 
-.dropdown-menu[data-bs-popper] {
-    left: -75% !important;
+.nav-brand-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.3px;
+
+  span { color: var(--gold); }
+}
+
+.app-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  a {
+    color: oklch(75% 0.04 145);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.15s;
+    display: block;
+
+    &:hover { color: var(--white); background: oklch(22% 0.07 145); }
+    &.active { color: var(--gold); }
+  }
+
+  @media (max-width: 480px) { display: none; }
+}
+
+.nav-user-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--white);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: oklch(22% 0.07 145);
+  transition: background 0.15s;
+
+  &:hover { background: oklch(26% 0.08 145); }
+}
+
+.nav-user-name {
+  @media (max-width: 480px) { display: none; }
+}
+
+.nav-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--green-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: white;
+  flex-shrink: 0;
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: oklch(14% 0.05 145);
+  border: 1px solid oklch(24% 0.08 145);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  min-width: 140px;
+
+  a {
+    display: block;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: oklch(75% 0.04 145);
+    text-decoration: none;
+    transition: all 0.12s;
+
+    &:hover { background: oklch(22% 0.07 145); color: var(--white); }
+  }
 }
 </style>

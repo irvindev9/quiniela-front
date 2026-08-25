@@ -1,69 +1,129 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-12 col-md-10 col-lg-8 text-center bg-white rounded p-2">
-        <h5 class="py-3">Tabla de resultados</h5>
-        <div class="row mx-0" v-if="isLoading">
-          <div class="d-flex justify-content-center">
-            <div class="spinner-border text-secondary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        </div>
-        <div class="row mx-0 justify-content-center" v-else>
-          <div class="col-12 col-md-10">
-            <FirstPlaces :players="first_places" />
-          </div>
-          <div class="col-12 col-md-10">
-            <SecondPlaces :players="second_places" />
-          </div>
-        </div>
+  <div class="leaderboard-page">
+    <div class="lb-page-inner">
+      <div v-if="isLoading" class="spinner-wrap">
+        <div class="lb-spinner"></div>
       </div>
+      <template v-else>
+        <div class="podium-section">
+          <div class="section-header">
+            <span class="section-title">🏆 Tabla General</span>
+            <span class="section-badge">Temporada 2024–25</span>
+          </div>
+          <FirstPlaces :players="first_places" />
+          <SecondPlaces :players="second_places" />
+        </div>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import FirstPlaces from '../components/leaderboard/FirstPlaces.vue';
-import SecondPlaces from '../components/leaderboard/SecondPlaces.vue';
-import { getLeaderboard } from '../api/resultsRequests';
-import { onMounted, ref } from 'vue';
-import { useLeaderBoardStore } from '../stores/LeaderBoardStore';
+import { ref, onMounted } from 'vue'
+import FirstPlaces from '../components/leaderboard/FirstPlaces.vue'
+import SecondPlaces from '../components/leaderboard/SecondPlaces.vue'
+import { getLeaderboard } from '../api/resultsRequests'
+import { useLeaderBoardStore } from '../stores/LeaderBoardStore'
+import type { Player } from '../models/Quinielas'
 
-const players = ref([])
-const first_places = ref([])
-const second_places = ref([])
 const leaderBoardStore = useLeaderBoardStore()
 const isLoading = ref(true)
+const first_places = ref<Player[]>([])
+const second_places = ref<Player[]>([])
 
 onMounted(async () => {
-  if(checkForUpdate()) {
-    players.value = await getLeaderboard();
-    leaderBoardStore.setLeaderBoard(players.value);
+  let players: Player[]
+
+  if (checkForUpdate()) {
+    players = await getLeaderboard()
+    leaderBoardStore.setLeaderBoard(players)
   } else {
-    players.value = leaderBoardStore.leaderBoard;
+    players = leaderBoardStore.leaderBoard
   }
 
   isLoading.value = false
-  
 
-  if(players.value.length >= 3) {
-    first_places.value = players.value.slice(0, 3);
-    second_places.value = players.value.slice(3);
-  }else{
-    first_places.value = players.value;
-    second_places.value = [];
+  if (players.length >= 3) {
+    first_places.value = players.slice(0, 3)
+    second_places.value = players.slice(3)
+  } else {
+    first_places.value = players
+    second_places.value = []
   }
-});
+})
 
-function checkForUpdate(){
-  const tenMinutesAgo = 1 * 60 * 1000;
-    const timeToUpdate = leaderBoardStore.lastTimeUpdated ? leaderBoardStore.lastTimeUpdated : 0;
-    if (timeToUpdate < (new Date().getTime() - tenMinutesAgo)) {
-        return true;
-    } else {
-        return false;
-    }
+function checkForUpdate() {
+  const tenMinutesAgo = 10 * 60 * 1000
+  const timeToUpdate = leaderBoardStore.lastTimeUpdated ?? 0
+  return timeToUpdate < new Date().getTime() - tenMinutesAgo
+}
+</script>
+
+<style lang="scss">
+.leaderboard-page {
+  background-color: var(--green-dark);
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 79px, oklch(22% 0.07 145) 79px, oklch(22% 0.07 145) 80px),
+    repeating-linear-gradient(90deg, transparent, transparent 79px, oklch(22% 0.07 145) 79px, oklch(22% 0.07 145) 80px);
+  min-height: calc(100vh - 60px);
+  color: var(--text-dark);
 }
 
-</script>
+.lb-page-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 28px 16px 80px;
+}
+
+.podium-section {
+  background: var(--card-bg);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+}
+
+.section-header {
+  padding: 16px 22px;
+  background: white;
+  border-bottom: 1.5px solid oklch(92% 0.01 145);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-dark);
+}
+
+.section-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--green-accent);
+  color: white;
+  margin-left: auto;
+}
+
+.spinner-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px;
+}
+
+.lb-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid oklch(28% 0.07 145);
+  border-top-color: var(--green-accent);
+  border-radius: 50%;
+  animation: lb-spin 0.7s linear infinite;
+}
+
+@keyframes lb-spin {
+  to { transform: rotate(360deg); }
+}
+</style>

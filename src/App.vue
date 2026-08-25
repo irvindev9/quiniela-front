@@ -56,21 +56,6 @@ onUpdated(async () => {
 })
 </script>
 
-<style>
-.app_background {
-  background-image: url("./assets/background.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  height: 100vh;
-  overflow-y: auto;
-}
-.app {
-  /* background-image: url("./assets/background.jpg"); */
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  height: 100vh;
-  overflow-y: auto;
-}
+<style lang="scss">
+@import './assets/styles/global.scss';
 </style>

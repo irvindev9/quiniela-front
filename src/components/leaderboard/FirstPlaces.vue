@@ -1,147 +1,145 @@
 <template>
-  <div class="first-places row mx-0">
-    <div class="col second-place" v-if="props.players[1]">
-      <div class="circle shadow-sm">
-        <img :src="props.players[1].img" alt="img" v-if="props.players[1].img">
-        <img :src="get_img(props.players[1].team_id)" alt="img" v-else>
-        <div class="place-holder">
-          <span>{{props.players[1].position}}</span>
+  <div class="podium-wrap">
+    <div
+      v-for="player in players"
+      :key="player.user_id"
+      class="podium-player"
+      :class="posClass(player.position)"
+    >
+      <div class="podium-avatar-wrap">
+        <div class="podium-avatar">
+          <img :src="avatarSrc(player)" :alt="player.name" />
         </div>
+        <div class="podium-rank">{{ player.position }}</div>
       </div>
-      <p>
-        <small>{{props.players[1].name}}</small>
-        <br>
-        <span class="badge rounded-pill bg-light text-dark">{{props.players[1].points}} pts</span>
-        <br>
-        <span class="badge rounded border shadow-sm text-dark" v-if="props.players[1].diff_from_last_week && props.players[1].diff_from_last_week !== 0">
-          {{props.players[1].diff_from_last_week ? props.players[1].diff_from_last_week : 0}}
-          <i class="bi bi-caret-up-fill" :class="{'text-success': (props.players[1].diff_from_last_week && props.players[1].diff_from_last_week > 0)}" v-if="props.players[1].diff_from_last_week && props.players[1].diff_from_last_week > 0"></i>
-          <i class="bi bi-caret-down-fill" :class="{'text-danger': (props.players[1].diff_from_last_week && props.players[1].diff_from_last_week < 0)}" v-if="props.players[1].diff_from_last_week && props.players[1].diff_from_last_week < 0"></i>
-        </span>
-      </p>
-    </div>
-    <div class="col" v-if="props.players[0]">
-      <div class="circle shadow-sm">
-        <img :src="props.players[0].img" alt="img" v-if="props.players[0].img">
-        <img :src="get_img(props.players[0].team_id)" alt="img" v-else>
-        <div class="place-holder">
-          <span>{{props.players[0].position}}</span>
-        </div>
+      <div class="podium-name">{{ firstName(player.name) }}</div>
+      <div class="podium-pts" :class="{ gold: player.position === 1 }">{{ player.points }} pts</div>
+      <div
+        v-if="player.diff_from_last_week"
+        class="podium-diff"
+        :class="{ up: player.diff_from_last_week > 0, down: player.diff_from_last_week < 0 }"
+      >
+        {{ player.diff_from_last_week > 0 ? '▲' : '▼' }} {{ Math.abs(player.diff_from_last_week) }}
       </div>
-      <p>
-        <small>{{props.players[0].name}}</small>
-        <br>
-        <span class="badge rounded-pill bg-light text-dark">{{props.players[0].points}} pts</span>
-        <br>
-        <span class="badge rounded border shadow-sm text-dark" v-if="props.players[0].diff_from_last_week && props.players[0].diff_from_last_week !== 0">
-          {{props.players[0].diff_from_last_week ? props.players[0].diff_from_last_week : 0}}
-          <i class="bi bi-caret-up-fill" :class="{'text-success': (props.players[0].diff_from_last_week && props.players[0].diff_from_last_week > 0)}" v-if="props.players[0].diff_from_last_week && props.players[0].diff_from_last_week > 0"></i>
-          <i class="bi bi-caret-down-fill" :class="{'text-danger': (props.players[0].diff_from_last_week && props.players[0].diff_from_last_week < 0)}" v-if="props.players[0].diff_from_last_week && props.players[0].diff_from_last_week < 0"></i>
-        </span>
-      </p>
-    </div>
-    <div class="col second-place" v-if="props.players[2]">
-      <div class="circle shadow-sm">
-        <img :src="props.players[2].img" alt="img" v-if="props.players[2].img">
-        <img :src="get_img(props.players[2].team_id)" alt="img" v-else>
-        <div class="place-holder">
-          <span>{{props.players[2].position}}</span>
-        </div>
-      </div>
-      <p>
-        <small>{{props.players[2].name}}</small>
-        <br>
-        <span class="badge rounded-pill bg-light text-dark">{{props.players[2].points}} pts</span>
-        <br>
-        <span class="badge rounded border shadow-sm text-dark" v-if="props.players[2].diff_from_last_week && props.players[2].diff_from_last_week !== 0">
-          {{props.players[2].diff_from_last_week ? props.players[2].diff_from_last_week : 0}}
-          <i class="bi bi-caret-up-fill" :class="{'text-success': (props.players[2].diff_from_last_week && props.players[2].diff_from_last_week > 0)}" v-if="props.players[2].diff_from_last_week && props.players[2].diff_from_last_week > 0"></i>
-          <i class="bi bi-caret-down-fill" :class="{'text-danger': (props.players[2].diff_from_last_week && props.players[2].diff_from_last_week < 0)}" v-if="props.players[2].diff_from_last_week && props.players[2].diff_from_last_week < 0"></i>
-        </span>
-      </p>
+      <div class="podium-bar-wrap"></div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Players } from '../../models/Quinielas';
+import type { Player } from '../../models/Quinielas'
 
-const props = defineProps<{
-  players: Players[];
-}>();
+const props = defineProps<{ players: Player[] }>()
 
-function get_img(logo: string) {
-  const logo_padded = logo.toString().padStart(2, "0");
-  return new URL(`../../assets/teams/team_${logo_padded}.png`, import.meta.url).href;
+function posClass(position: number) {
+  return position === 1 ? 'first' : position === 2 ? 'second' : 'third'
+}
+
+function firstName(name: string) {
+  return name.split(' ')[0]
+}
+
+function avatarSrc(player: Player) {
+  if (player.img) return player.img
+  const padded = player.team_id.toString().padStart(2, '0')
+  return new URL(`../../assets/teams/team_${padded}.png`, import.meta.url).href
 }
 </script>
 
 <style lang="scss">
-$sm: 576px;
-$md: 768px;
-
-.first-places {
+.podium-wrap {
+  padding: 28px 20px 0;
   display: flex;
-  justify-content: space-between;
-  align-items: end;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 12px;
+}
 
-  .circle {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
-    margin: auto;
-    border: 3px solid rgba(180, 180, 180, 0.5);
-    cursor: default !important;
-    
-    
+.podium-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 160px;
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+  &.first  { order: 2; }
+  &.second { order: 1; }
+  &.third  { order: 3; }
+}
 
-    .place-holder {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 1.5rem;
-      font-weight: 500;
-    }
+.podium-avatar-wrap {
+  position: relative;
+  display: inline-block;
+}
 
-    .place-holder:hover {
-      display: none;
-    }
+.podium-avatar {
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid oklch(85% 0.02 145);
 
-    .place-holder span:hover {
-      display: none;
-    }
-  }
+  img { width: 100%; height: 100%; object-fit: cover; }
 
-  .second-place {
-    .circle {
-      width: 80px;
-      height: 80px;
-    }
-  }
+  .podium-player.first  & { width: 88px; height: 88px; border-color: var(--gold); border-width: 3px; box-shadow: 0 0 0 4px oklch(90% 0.12 85 / 0.4); }
+  .podium-player.second & { width: 70px; height: 70px; border-color: var(--silver); }
+  .podium-player.third  & { width: 70px; height: 70px; border-color: var(--bronze); }
+}
 
-  .col {
-    p {
-      font-size: smaller;
+.podium-rank {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: white;
+  border: 2px solid white;
+  z-index: 2;
 
-      @media (min-width: $md) {
-        font-size: medium;
-      }
-    }
-  }
+  .podium-player.first  & { background: var(--gold);   width: 30px; height: 30px; font-size: 0.85rem; }
+  .podium-player.second & { background: var(--silver); color: var(--text-dark); }
+  .podium-player.third  & { background: var(--bronze); }
+}
+
+.podium-name {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  text-align: center;
+}
+
+.podium-pts {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: oklch(94% 0.03 85);
+  color: oklch(50% 0.15 85);
+
+  &.gold { background: var(--gold); color: white; }
+}
+
+.podium-diff {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-light);
+
+  &.up   { color: var(--green-accent); }
+  &.down { color: var(--danger); }
+}
+
+.podium-bar-wrap {
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  padding-top: 10px;
+
+  .podium-player.first  & { background: oklch(94% 0.06 85);  min-height: 72px; }
+  .podium-player.second & { background: oklch(94% 0.01 250); min-height: 48px; }
+  .podium-player.third  & { background: oklch(93% 0.04 55);  min-height: 32px; }
 }
 </style>
