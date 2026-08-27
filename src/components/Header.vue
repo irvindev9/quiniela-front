@@ -7,16 +7,16 @@
 
     <ul class="app-nav-links">
       <li v-if="userStore.isAuthenticated && userStore.role_id == 1">
-        <a href="#" :class="{ active: route.name === 'Admin' }" @click.prevent="router.push('admin')">Panel Admin</a>
+        <a href="#" :class="{ active: route.name === 'Admin' }" @click.prevent="router.push('/admin')">Panel Admin</a>
       </li>
       <li>
-        <a href="#" :class="{ active: route.name === 'Marcador' }" @click.prevent="router.push('marcador')">Marcador</a>
+        <a href="#" :class="{ active: route.name === 'Marcador' }" @click.prevent="router.push('/marcador')">Marcador</a>
       </li>
       <li>
-        <a href="#" :class="{ active: route.name === 'Quinielas' }" @click.prevent="router.push('quinielas')">Todas las quinielas</a>
+        <a href="#" :class="{ active: route.name === 'Quinielas' }" @click.prevent="router.push('/quinielas')">Todas las quinielas</a>
       </li>
       <li v-if="userStore.isAuthenticated">
-        <a href="#" :class="{ active: route.name === 'MiQuiniela' }" @click.prevent="router.push('mi-quiniela')">Mi quiniela</a>
+        <a href="#" :class="{ active: route.name === 'MiQuiniela' }" @click.prevent="router.push('/mi-quiniela')">Mi quiniela</a>
       </li>
     </ul>
 
@@ -26,7 +26,42 @@
         <span class="nav-user-name">{{ userStore.name }}</span>
       </div>
       <div v-if="showDropdown" class="nav-dropdown">
-        <a href="#" @click.prevent="router.push('/'); showDropdown = false">Perfil</a>
+        <a
+          v-if="userStore.isAuthenticated && userStore.role_id == 1"
+          href="#"
+          class="mobile-only-link"
+          :class="{ active: route.name === 'Admin' }"
+          @click.prevent="router.push('/admin'); showDropdown = false"
+        >
+          Panel Admin
+        </a>
+        <a
+          href="#"
+          class="mobile-only-link"
+          :class="{ active: route.name === 'Marcador' }"
+          @click.prevent="router.push('/marcador'); showDropdown = false"
+        >
+          Marcador
+        </a>
+        <a
+          href="#"
+          class="mobile-only-link"
+          :class="{ active: route.name === 'Quinielas' }"
+          @click.prevent="router.push('/quinielas'); showDropdown = false"
+        >
+          Todas las quinielas
+        </a>
+        <a
+          v-if="userStore.isAuthenticated"
+          href="#"
+          class="mobile-only-link"
+          :class="{ active: route.name === 'MiQuiniela' }"
+          @click.prevent="router.push('/mi-quiniela'); showDropdown = false"
+        >
+          Mi quiniela
+        </a>
+        <div class="dropdown-divider mobile-only-link"></div>
+        <a href="#" :class="{ active: route.name === 'Home' }" @click.prevent="router.push('/'); showDropdown = false">Perfil</a>
         <a href="#" @click.prevent="doLogout">Cerrar sesión</a>
       </div>
     </div>
@@ -134,7 +169,7 @@ function doLogout() {
     &.active { color: var(--gold); }
   }
 
-  @media (max-width: 480px) { display: none; }
+  @media (max-width: 768px) { display: none; }
 }
 
 .nav-user-wrap {
@@ -159,7 +194,7 @@ function doLogout() {
 }
 
 .nav-user-name {
-  @media (max-width: 480px) { display: none; }
+  @media (max-width: 768px) { display: none; }
 }
 
 .nav-avatar {
@@ -185,7 +220,7 @@ function doLogout() {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  min-width: 140px;
+  min-width: 170px;
 
   a {
     display: block;
@@ -195,8 +230,23 @@ function doLogout() {
     color: oklch(75% 0.04 145);
     text-decoration: none;
     transition: all 0.12s;
+    white-space: nowrap;
 
     &:hover { background: oklch(22% 0.07 145); color: var(--white); }
+    &.active { color: var(--gold); }
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: oklch(24% 0.08 145);
+    margin: 4px 0;
+  }
+}
+
+.mobile-only-link {
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
   }
 }
 </style>
