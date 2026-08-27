@@ -210,10 +210,6 @@ onMounted(async () => {
 
 <style lang="scss">
 .results-page {
-  background-color: var(--green-dark);
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 79px, oklch(22% 0.07 145) 79px, oklch(22% 0.07 145) 80px),
-    repeating-linear-gradient(90deg, transparent, transparent 79px, oklch(22% 0.07 145) 79px, oklch(22% 0.07 145) 80px);
   min-height: calc(100vh - 60px);
   color: var(--text-dark);
 }
@@ -230,9 +226,10 @@ onMounted(async () => {
 }
 
 .week-label {
-  color: oklch(65% 0.06 145);
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-bottom: 8px;

@@ -165,10 +165,6 @@ onMounted(async () => {
 
 <style lang="scss">
 .mq-page {
-  background-color: var(--green-dark);
-  background-image:
-    repeating-linear-gradient(0deg, transparent, transparent 79px, oklch(22% 0.07 145) 79px, oklch(22% 0.07 145) 80px),
-    repeating-linear-gradient(90deg, transparent, transparent 79px, oklch(22% 0.07 145) 79px, oklch(22% 0.07 145) 80px);
   min-height: calc(100vh - 60px);
 }
 
