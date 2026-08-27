@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
 
+const currentYear = new Date().getFullYear();
+
 export const useAdminStore = defineStore('admin', {
   state: () =>  {
     return {
-      currentSeason: "Temporada 2022",
+      currentSeason: `Temporada ${currentYear} - ${currentYear + 1}`,
     }
   }, 
   actions: {

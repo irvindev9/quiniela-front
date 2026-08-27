@@ -8,7 +8,7 @@
         <div class="podium-section">
           <div class="section-header">
             <span class="section-title">🏆 Tabla General</span>
-            <span class="section-badge">Temporada 2024–25</span>
+            <span class="section-badge">Temporada {{ currentSeasonText }}</span>
           </div>
           <FirstPlaces :players="first_places" />
           <SecondPlaces :players="second_places" />
@@ -19,12 +19,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import FirstPlaces from '../components/leaderboard/FirstPlaces.vue'
 import SecondPlaces from '../components/leaderboard/SecondPlaces.vue'
 import { getLeaderboard } from '../api/resultsRequests'
 import { useLeaderBoardStore } from '../stores/LeaderBoardStore'
 import type { Player } from '../models/Quinielas'
+
+const currentYear = new Date().getFullYear()
+const currentSeasonText = computed(() => `${currentYear} - ${currentYear + 1}`)
 
 const leaderBoardStore = useLeaderBoardStore()
 const isLoading = ref(true)
