@@ -8,6 +8,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.js'
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "izitoast/dist/css/iziToast.min.css"
+import { setupAxiosInterceptors } from './api/axios'
+
+setupAxiosInterceptors()
 
 let vm = createApp(App)
 
