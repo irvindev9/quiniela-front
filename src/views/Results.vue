@@ -70,13 +70,26 @@
                       >
                         <img :src="get_img_of_selection(user.results, match.id)" />
                       </div>
-                      <div v-else class="pick-chip pending">
+                      <div v-else class="pick-chip pending" title="Sin pronóstico">
                         <span class="pick-unknown">?</span>
                       </div>
                     </template>
-                    <div v-else class="pick-chip pending">
-                      <span class="pick-unknown">?</span>
-                    </div>
+                    <template v-else>
+                      <div
+                        v-if="has_selection(user.results, match.id)"
+                        class="pick-chip submitted"
+                        title="Pronóstico registrado"
+                      >
+                        <i class="bi bi-check-lg"></i>
+                      </div>
+                      <div
+                        v-else
+                        class="pick-chip not-submitted"
+                        title="Sin pronóstico"
+                      >
+                        <i class="bi bi-x-lg"></i>
+                      </div>
+                    </template>
                   </td>
                   <td>
                     <span class="pts-chip">{{ isActive ? user.points : '–' }}</span>
@@ -86,9 +99,23 @@
               <tfoot>
                 <tr>
                   <td :colspan="matches.length + 2">
-                    {{ isActive
-                      ? `✔ ${get_name_current_week()} — resultados disponibles`
-                      : `🔒 ${get_name_current_week()} — resultados aún no disponibles` }}
+                    <div class="results-footer-content">
+                      <span>
+                        {{ isActive
+                          ? `✔ ${get_name_current_week()} — resultados disponibles`
+                          : `🔒 ${get_name_current_week()} — resultados aún no disponibles` }}
+                      </span>
+                      <span v-if="!isActive" class="results-legend">
+                        <span class="legend-item">
+                          <span class="legend-chip submitted"><i class="bi bi-check-lg"></i></span>
+                          <span>Pronóstico enviado</span>
+                        </span>
+                        <span class="legend-item">
+                          <span class="legend-chip not-submitted"><i class="bi bi-x-lg"></i></span>
+                          <span>Sin pronóstico</span>
+                        </span>
+                      </span>
+                    </div>
                   </td>
                 </tr>
               </tfoot>
@@ -173,6 +200,12 @@ function get_img_of_selection(player_results: any, match_id: number): string {
 
 function get_results_of_match(results_of_player: any, match_id: number) {
   return results_of_player.find((r: any) => r.match_id == match_id)?.team_id ?? 0
+}
+
+function has_selection(player_results: any, match_id: number): boolean {
+  if (!player_results || !Array.isArray(player_results)) return false
+  const pick = player_results.find((r: any) => r.match_id == match_id)
+  return !!(pick && pick.team_id)
 }
 
 function get_name_current_week() {
@@ -369,6 +402,51 @@ onMounted(async () => {
   }
 }
 
+.results-footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.results-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.72rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-mid);
+  font-weight: 700;
+}
+
+.legend-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 0.65rem;
+
+  &.submitted {
+    background: oklch(92% 0.08 145);
+    color: var(--green-accent);
+    box-shadow: 0 0 0 1.5px var(--green-accent);
+  }
+
+  &.not-submitted {
+    background: oklch(96% 0.02 25);
+    color: var(--danger);
+    box-shadow: 0 0 0 1.5px oklch(88% 0.06 25);
+  }
+}
+
 .vs-pair {
   display: flex;
   align-items: center;
@@ -426,6 +504,22 @@ onMounted(async () => {
   &.correct { background: oklch(92% 0.08 145); box-shadow: 0 0 0 2px var(--green-accent); }
   &.wrong   { background: oklch(96% 0.03 25);  box-shadow: 0 0 0 2px var(--danger); }
   &.pending { opacity: 0.45; }
+
+  &.submitted {
+    background: oklch(92% 0.08 145);
+    color: var(--green-accent);
+    box-shadow: 0 0 0 1.5px var(--green-accent);
+    font-size: 1rem;
+    font-weight: 800;
+  }
+
+  &.not-submitted {
+    background: oklch(96% 0.02 25);
+    color: var(--danger);
+    box-shadow: 0 0 0 1.5px oklch(88% 0.06 25);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
 }
 
 .pick-unknown {
